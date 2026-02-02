@@ -45,10 +45,17 @@
 
         <!-- Database - MySQL (COMMENT/UNCOMMENT for MySQL or PostgreSQL) -->
         <!-- MySQL Dependency -->
+<!--        <dependency>-->
+<!--            <groupId>mysql</groupId>-->
+<!--            <artifactId>mysql-connector-java</artifactId>-->
+<!--            <version>${mysql.version}</version>-->
+<!--        </dependency>-->
+
+        <!-- PostgreSQL Driver -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.6.0</version>
         </dependency>
 
         <!-- HikariCP (Connection Pooling) -->
