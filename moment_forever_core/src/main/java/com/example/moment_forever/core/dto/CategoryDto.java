@@ -1,4 +1,4 @@
-package com.example.moment_forever.core.admin.dto;
+package com.example.moment_forever.core.dto;
 
 public class CategoryDto extends NamedEntityDto {
     private String desc;

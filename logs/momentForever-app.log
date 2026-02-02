@@ -2681,7 +2681,7 @@ org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse 
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-Caused by: org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'categoryService' for bean class [com.example.moment_forever.core.test.CategoryService] conflicts with existing, non-compatible bean definition of same name and class [com.example.moment_forever.core.admin.services.CategoryService]
+Caused by: org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'categoryService' for bean class [com.example.moment_forever.core.CategoryService] conflicts with existing, non-compatible bean definition of same name and class [com.example.moment_forever.core.admin.services.CategoryService]
 	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.checkCandidate(ClassPathBeanDefinitionScanner.java:349)
 	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan(ClassPathBeanDefinitionScanner.java:287)
 	at org.springframework.context.annotation.ComponentScanAnnotationParser.parse(ComponentScanAnnotationParser.java:128)
@@ -5813,3 +5813,218 @@ Consider defining a bean of type 'com.example.moment_forever.data.dao.CategoryDa
         (created_on,description,is_enabled,name) 
     values
         (?,?,?,?)
+2026-02-02 18:11:56 - INFO  - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-02 18:11:56 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-02-02 18:11:56 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-02-02 18:17:07 - INFO  - c.e.m.core.MomentForeverApp - Starting MomentForeverApp using Java 17.0.12 with PID 28172 (C:\Project_APP\MomentForeverApp\moment_forever_core\target\classes started by Manish Sharma in C:\Project_APP\MomentForeverApp)
+2026-02-02 18:17:07 - INFO  - c.e.m.core.MomentForeverApp - No active profile set, falling back to 1 default profile: "default"
+2026-02-02 18:17:07 - INFO  - o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-02 18:17:07 - INFO  - o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-02 18:17:08 - INFO  - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-02 18:17:08 - INFO  - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 12 ms. Found 0 JPA repository interfaces.
+2026-02-02 18:17:09 - ERROR - o.a.c.core.AprLifecycleListener - An incompatible version [1.2.31] of the Apache Tomcat Native library is installed, while Tomcat requires version [1.2.34]
+2026-02-02 18:17:09 - INFO  - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2026-02-02 18:17:09 - INFO  - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-02-02 18:17:09 - INFO  - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.15]
+2026-02-02 18:17:09 - INFO  - o.a.c.c.C.[.[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2026-02-02 18:17:09 - INFO  - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1755 ms
+2026-02-02 18:17:09 - INFO  - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-02 18:17:09 - INFO  - org.hibernate.Version - HHH000412: Hibernate ORM core version 6.2.13.Final
+2026-02-02 18:17:09 - INFO  - org.hibernate.cfg.Environment - HHH000406: Using bytecode reflection optimizer
+2026-02-02 18:17:10 - INFO  - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-02 18:17:10 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-02-02 18:17:10 - INFO  - com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3193b266
+2026-02-02 18:17:10 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-02-02 18:17:10 - WARN  - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-02 18:17:10 - WARN  - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-02-02 18:17:11 - INFO  - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-02 18:17:11 - INFO  - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-02 18:17:11 - INFO  - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-02-02 18:17:11 - INFO  - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path '/api'
+2026-02-02 18:17:11 - INFO  - c.e.m.core.MomentForeverApp - Started MomentForeverApp in 4.667 seconds (process running for 5.113)
+2026-02-02 18:17:16 - INFO  - o.a.c.c.C.[.[localhost].[/api] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-02 18:17:16 - INFO  - o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-02-02 18:17:16 - INFO  - o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-02-02 18:17:16 - DEBUG - org.hibernate.SQL - 
+    select
+        count(c1_0.id) 
+    from
+        category c1_0 
+    where
+        c1_0.name=?
+2026-02-02 18:20:06 - INFO  - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-02 18:20:06 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-02-02 18:20:06 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-02-02 18:39:23 - INFO  - c.e.m.core.MomentForeverApp - Starting MomentForeverApp using Java 17.0.12 with PID 28668 (C:\Project_APP\MomentForeverApp\moment_forever_core\target\classes started by Manish Sharma in C:\Project_APP\MomentForeverApp)
+2026-02-02 18:39:23 - INFO  - c.e.m.core.MomentForeverApp - No active profile set, falling back to 1 default profile: "default"
+2026-02-02 18:39:24 - INFO  - o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-02 18:39:24 - INFO  - o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-02 18:39:24 - INFO  - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-02 18:39:24 - INFO  - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 10 ms. Found 0 JPA repository interfaces.
+2026-02-02 18:39:25 - ERROR - o.a.c.core.AprLifecycleListener - An incompatible version [1.2.31] of the Apache Tomcat Native library is installed, while Tomcat requires version [1.2.34]
+2026-02-02 18:39:25 - INFO  - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2026-02-02 18:39:25 - INFO  - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-02-02 18:39:25 - INFO  - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.15]
+2026-02-02 18:39:25 - INFO  - o.a.c.c.C.[.[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2026-02-02 18:39:25 - INFO  - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1653 ms
+2026-02-02 18:39:25 - INFO  - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-02 18:39:25 - INFO  - org.hibernate.Version - HHH000412: Hibernate ORM core version 6.2.13.Final
+2026-02-02 18:39:25 - INFO  - org.hibernate.cfg.Environment - HHH000406: Using bytecode reflection optimizer
+2026-02-02 18:39:26 - INFO  - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-02 18:39:26 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-02-02 18:39:26 - INFO  - com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@46072b78
+2026-02-02 18:39:26 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-02-02 18:39:26 - WARN  - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-02 18:39:26 - WARN  - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-02-02 18:39:27 - INFO  - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-02 18:39:27 - INFO  - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-02 18:39:28 - INFO  - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-02-02 18:39:28 - INFO  - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path '/api'
+2026-02-02 18:39:28 - INFO  - c.e.m.core.MomentForeverApp - Started MomentForeverApp in 4.738 seconds (process running for 5.264)
+2026-02-02 18:39:33 - INFO  - o.a.c.c.C.[.[localhost].[/api] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-02 18:39:33 - INFO  - o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-02-02 18:39:33 - INFO  - o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-02-02 18:39:37 - DEBUG - org.hibernate.SQL - 
+    select
+        count(c1_0.id) 
+    from
+        category c1_0 
+    where
+        c1_0.name=?
+2026-02-02 18:39:53 - ERROR - o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [/api] threw exception [Request processing failed: java.lang.RuntimeException: Category with name 'Electronics' already exists] with root cause
+java.lang.RuntimeException: Category with name 'Electronics' already exists
+	at com.example.moment_forever.core.services.CategoryService.createCategory(CategoryService.java:23)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:703)
+	at com.example.moment_forever.core.services.CategoryService$$SpringCGLIB$$0.createCategory(<generated>)
+	at com.example.moment_forever.core.controller.CategoryController.createCategory(CategoryController.java:32)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2026-02-02 18:40:09 - DEBUG - org.hibernate.SQL - 
+    select
+        count(c1_0.id) 
+    from
+        category c1_0 
+    where
+        c1_0.name=?
+2026-02-02 18:40:09 - DEBUG - org.hibernate.SQL - 
+    insert 
+    into
+        category
+        (created_on,description,is_enabled,name) 
+    values
+        (?,?,?,?)
+2026-02-02 18:40:30 - DEBUG - org.hibernate.SQL - 
+    select
+        count(c1_0.id) 
+    from
+        category c1_0 
+    where
+        c1_0.name=?
+2026-02-02 18:40:36 - DEBUG - org.hibernate.SQL - 
+    insert 
+    into
+        category
+        (created_on,description,is_enabled,name) 
+    values
+        (?,?,?,?)
+2026-02-02 19:08:55 - INFO  - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-02 19:08:55 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-02-02 19:08:55 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-02-02 19:09:48 - INFO  - c.e.m.core.MomentForeverApp - Starting MomentForeverApp using Java 17.0.12 with PID 32472 (C:\Project_APP\MomentForeverApp\moment_forever_core\target\classes started by Manish Sharma in C:\Project_APP\MomentForeverApp)
+2026-02-02 19:09:48 - INFO  - c.e.m.core.MomentForeverApp - No active profile set, falling back to 1 default profile: "default"
+2026-02-02 19:09:48 - INFO  - o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-02 19:09:48 - INFO  - o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-02 19:09:49 - INFO  - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-02 19:09:49 - INFO  - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 19 ms. Found 0 JPA repository interfaces.
+2026-02-02 19:09:50 - ERROR - o.a.c.core.AprLifecycleListener - An incompatible version [1.2.31] of the Apache Tomcat Native library is installed, while Tomcat requires version [1.2.34]
+2026-02-02 19:09:50 - INFO  - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2026-02-02 19:09:50 - INFO  - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-02-02 19:09:50 - INFO  - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.15]
+2026-02-02 19:09:50 - INFO  - o.a.c.c.C.[.[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2026-02-02 19:09:50 - INFO  - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1933 ms
+2026-02-02 19:09:51 - INFO  - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-02 19:09:51 - INFO  - org.hibernate.Version - HHH000412: Hibernate ORM core version 6.2.13.Final
+2026-02-02 19:09:51 - INFO  - org.hibernate.cfg.Environment - HHH000406: Using bytecode reflection optimizer
+2026-02-02 19:09:51 - INFO  - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-02 19:09:51 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-02-02 19:09:51 - INFO  - com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@72f781d9
+2026-02-02 19:09:51 - INFO  - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-02-02 19:09:51 - WARN  - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-02 19:09:51 - WARN  - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-02-02 19:09:52 - INFO  - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-02 19:09:52 - INFO  - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-02 19:09:53 - INFO  - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-02-02 19:09:53 - INFO  - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path '/api'
+2026-02-02 19:09:53 - INFO  - c.e.m.core.MomentForeverApp - Started MomentForeverApp in 5.239 seconds (process running for 5.846)
+2026-02-02 19:10:01 - INFO  - o.a.c.c.C.[.[localhost].[/api] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-02 19:10:01 - INFO  - o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-02-02 19:10:01 - INFO  - o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-02-02 19:10:01 - DEBUG - org.hibernate.SQL - 
+    select
+        count(c1_0.id) 
+    from
+        category c1_0 
+    where
+        c1_0.name=?
+2026-02-02 19:10:08 - WARN  - o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.IllegalArgumentException: Category with name 'Ballon' already exists]

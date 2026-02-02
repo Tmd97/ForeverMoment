@@ -1,4 +1,4 @@
-package api.response;
+package com.example.moment_forever.common.response;
 
 import org.springframework.http.HttpStatus;
 
@@ -46,4 +46,5 @@ public class ResponseUtil {
     public static <T> ApiResponse<T> buildBadRequestResponse(String message) {
         return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
     }
+
 }

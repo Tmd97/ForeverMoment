@@ -1,4 +1,4 @@
-package com.example.moment_forever.core.admin.dto;
+package com.example.moment_forever.core.dto;
 
 import java.util.Date;
 

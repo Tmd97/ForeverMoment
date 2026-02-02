@@ -1,4 +1,4 @@
-package api.response;
+package com.example.moment_forever.common.response;
 
 public class ApiResponse<T> {
     private int code;
