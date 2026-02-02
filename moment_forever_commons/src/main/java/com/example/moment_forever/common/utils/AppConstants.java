@@ -56,4 +56,5 @@ public class AppConstants {
     public static final String MSG_NOT_FOUND = "Resource not found";
     public static final String MSG_VALIDATION_ERROR = "Validation failed";
     public static final String MSG_INTERNAL_ERROR = "Internal server error";
+    public static final String MSG_FETCHED = "fetched Successfully";
 }
