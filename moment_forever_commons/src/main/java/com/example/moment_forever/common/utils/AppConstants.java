@@ -57,4 +57,17 @@ public class AppConstants {
     public static final String MSG_VALIDATION_ERROR = "Validation failed";
     public static final String MSG_INTERNAL_ERROR = "Internal server error";
     public static final String MSG_FETCHED = "fetched Successfully";
+
+    //security constants
+    public static final String SECRET_KEY = "your-secret-key-min-256-bit-change-in-production";
+    public static final long EXPIRATION_TIME = 864_000_000; // 10 days
+    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String HEADER_STRING = "Authorization";
+
+    // Public URLs that don't require authentication
+    public static final String[] PUBLIC_URLS = {
+            "/api/auth/**",           // Authentication endpoints
+            "/error",                 // Error handling
+            "/favicon.ico"           // Favicon
+    };
 }

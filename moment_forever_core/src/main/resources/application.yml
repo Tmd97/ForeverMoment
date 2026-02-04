@@ -114,6 +114,72 @@ logging:
     max-size: 10MB
     max-history: 30
 
+# ============================================
+# JWT SECURITY CONFIGURATION
+# ============================================
+jwt:
+  # Secret key for signing JWT tokens
+  # MUST be at least 256 bits (32 characters)
+  # In production, use environment variable: ${JWT_SECRET:default-secret-key}
+  secret: "your-256-bit-secret-key-must-be-at-least-32-characters-long-here"
+
+  # Token expiration times (in milliseconds)
+  expiration: 86400000    # 24 hours = 24 * 60 * 60 * 1000
+  refresh-expiration: 604800000  # 7 days = 7 * 24 * 60 * 60 * 1000
+
+  # Token issuer (optional)
+  issuer: "cherishx.com"
+
+  # Token audience (optional)
+  audience: "cherishx-web-app"
+
+  # Cookie settings (if using cookie-based token storage)
+  cookie:
+    name: "auth_token"
+    secure: true    # Send only over HTTPS in production
+    http-only: true # Prevent XSS attacks
+    max-age: 86400  # 24 hours in seconds
+
+# ============================================
+# APPLICATION SPECIFIC CONFIGURATION
+# ============================================
+  # CORS Configuration
+  cors:
+    allowed-origins:
+      - "http://localhost:3000"  # React frontend
+      - "http://localhost:4200"  # Angular frontend
+    allowed-methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "DELETE"
+      - "OPTIONS"
+    allowed-headers:
+      - "Authorization"
+      - "Content-Type"
+      - "X-Requested-With"
+    allow-credentials: true
+
+  # Password Policy
+  security:
+    password:
+      min-length: 8
+      require-uppercase: true
+      require-lowercase: true
+      require-digits: true
+      require-special-chars: true
+      max-age-days: 90  # Force password change after 90 days
+
+  # Rate Limiting (for production)
+  rate-limit:
+    login:
+      max-attempts: 5
+      window-minutes: 15
+    registration:
+      max-per-hour: 10
+      max-per-ip: 50
+
+
 # Actuator Endpoints
 management:
   endpoints:
