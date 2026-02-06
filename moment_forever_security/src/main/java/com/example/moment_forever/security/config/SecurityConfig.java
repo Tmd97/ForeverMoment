@@ -1,7 +1,5 @@
-package com.example.moment_forever.core.config;
+package com.example.moment_forever.security.config;
 
-import com.example.moment_forever.core.security.JwtAuthenticationFilter;
-import com.example.moment_forever.core.services.auth.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,7 +68,7 @@ public class SecurityConfig {
                                 "/webjars/**",            // WebJars for Swagger
                                 "/swagger-resources/**"   // Swagger resources
                         ).permitAll()
-                         //2. Admin endpoints
+                        //2. Admin endpoints
                         .requestMatchers("/admin/**", "/admin/**").hasRole("ADMIN")
 
                         // 3. User endpoints

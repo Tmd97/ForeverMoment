@@ -1,10 +1,5 @@
-package com.example.moment_forever.core.services.auth;
+package com.example.moment_forever.security.config;
 
-import com.example.moment_forever.core.dto.auth.AuthResponse;
-import com.example.moment_forever.core.dto.auth.LoginRequest;
-import com.example.moment_forever.core.dto.auth.RegisterRequest;
-import com.example.moment_forever.core.mapper.AppUserBeanMapper;
-import com.example.moment_forever.core.mapper.AuthBeanMapper;
 import com.example.moment_forever.data.dao.ApplicationUserDao;
 import com.example.moment_forever.data.dao.auth.AuthUserDao;
 import com.example.moment_forever.data.dao.auth.AuthUserRoleDao;
@@ -14,7 +9,6 @@ import com.example.moment_forever.data.entities.auth.AuthUser;
 import com.example.moment_forever.data.entities.auth.AuthUserRole;
 import com.example.moment_forever.data.entities.auth.Role;
 import jakarta.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

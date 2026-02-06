@@ -1,7 +1,5 @@
-package com.example.moment_forever.core.security;
+package com.example.moment_forever.security.config;
 
-import com.example.moment_forever.core.services.auth.CustomUserDetailsService;
-import com.example.moment_forever.core.services.auth.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

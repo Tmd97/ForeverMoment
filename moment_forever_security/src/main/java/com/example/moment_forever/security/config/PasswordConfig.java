@@ -1,4 +1,4 @@
-package com.example.moment_forever.core.config;
+package com.example.moment_forever.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

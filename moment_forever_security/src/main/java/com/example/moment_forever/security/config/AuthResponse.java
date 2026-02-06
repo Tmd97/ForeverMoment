@@ -1,4 +1,4 @@
-package com.example.moment_forever.core.dto.auth;
+package com.example.moment_forever.security.config;
 
 public class AuthResponse {
 

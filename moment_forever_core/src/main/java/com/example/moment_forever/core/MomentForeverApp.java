@@ -7,10 +7,11 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
-		"com.example.moment_forever"
+        "com.example.moment_forever"
 })
 @EntityScan(basePackages = {
-		"com.example.moment_forever.data.entities"
+        "com.example.moment_forever.data.entities",
+        "com.example.moment_forever.security.entities"  // If security has entities
 })
 
 public class MomentForeverApp {

@@ -1,11 +1,8 @@
-package com.example.moment_forever.core.mapper;
+package com.example.moment_forever.security.config;
 
-import com.example.moment_forever.core.dto.auth.RegisterRequest;
 import com.example.moment_forever.data.entities.ApplicationUser;
-import com.example.moment_forever.data.entities.auth.AuthUser;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class AppUserBeanMapper {
 
@@ -18,14 +15,6 @@ public class AppUserBeanMapper {
         applicationUser.setPreferredCity(request.getPreferredCity());
         applicationUser.setCreatedAt(LocalDateTime.now());
         return applicationUser;
-
-
     }
 
-    public static void mapEntityToDto(AuthUser authUser) {
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setEmail(authUser.getUsername());
-        registerRequest.setPassword(authUser.getPassword());
-
-    }
 }

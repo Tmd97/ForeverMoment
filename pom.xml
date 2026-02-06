@@ -21,6 +21,7 @@
         <module>moment_forever_commons</module>
         <module>moment_forever_data</module>
         <module>moment_forever_core</module>
+        <module>moment_forever_security</module>
     </modules>
 
     <properties>

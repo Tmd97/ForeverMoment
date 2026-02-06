@@ -1,8 +1,5 @@
-package com.example.moment_forever.core.controller.auth;
-import com.example.moment_forever.core.dto.auth.AuthResponse;
-import com.example.moment_forever.core.dto.auth.LoginRequest;
-import com.example.moment_forever.core.dto.auth.RegisterRequest;
-import com.example.moment_forever.core.services.auth.AuthService;
+package com.example.moment_forever.security.config;
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +16,13 @@ public class AuthController {
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
+
+    @PostConstruct
+    public void init() {
+        System.out.println(">>> AuthController CREATED");
+    }
+
+
 
     /**
      * Register a new user

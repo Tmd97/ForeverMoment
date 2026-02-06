@@ -1,4 +1,4 @@
-package com.example.moment_forever.core.services.auth;
+package com.example.moment_forever.security.config;
 
 import com.example.moment_forever.data.entities.auth.AuthUser;
 import com.example.moment_forever.data.entities.auth.Role;
@@ -237,12 +237,4 @@ public class JwtService {
                 .authorities(authorities)
                 .build();
     }
-
-
-
-
-
-
-
-
 }

@@ -1,6 +1,4 @@
-package com.example.moment_forever.core.mapper;
-
-import com.example.moment_forever.core.dto.auth.RegisterRequest;
+package com.example.moment_forever.security.config;
 import com.example.moment_forever.data.entities.auth.AuthUser;
 
 public class AuthBeanMapper {
