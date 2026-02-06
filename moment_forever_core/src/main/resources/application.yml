@@ -99,20 +99,7 @@ slug:
   max-length: 100
 
 # Logging Configuration
-logging:
-  level:
-    com.momentforever: DEBUG
-    org.springframework.web: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    com.zaxxer.hikari: INFO
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %highlight(%-5level) - %cyan(%logger{36}) - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} - %-5level - %logger{36} - %msg%n"
-  file:
-    name: logs/momentForever-app.log
-    max-size: 10MB
-    max-history: 30
+# MOVED TO LOGBACK FILE
 
 # ============================================
 # JWT SECURITY CONFIGURATION
@@ -191,3 +178,11 @@ management:
         show-details: always
     probes:
       enabled: true
+############## Swagger ########################
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    url: /v3/api-docs  # Explicitly tell Swagger UI where the JSON is
+  api-docs:
+    path: /v3/api-docs
+    #http://localhost:8080/api/swagger-ui/index.html

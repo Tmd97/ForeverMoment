@@ -121,7 +121,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Match the same public endpoints from SecurityConfig
         return requestPath.startsWith("/api/auth/") ||
                 requestPath.startsWith("/api/public/") ||
-                requestPath.startsWith("/swagger-ui/") ||
+                requestPath.startsWith("/api/swagger-ui/") ||
                 requestPath.startsWith("/v3/api-docs/") ||
                 requestPath.equals("/error");
     }
