@@ -1,4 +1,4 @@
-package com.example.moment_forever.core.controller;
+package com.example.moment_forever.core.controller.restricted;
 
 import com.example.moment_forever.common.response.ApiResponse;
 import com.example.moment_forever.common.response.ResponseUtil;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/subcategories")
-public class SubCategoryController {
+public class SubCategoryControllerAdmin {
 
     @Autowired
     private SubCategoryService subCategoryService;

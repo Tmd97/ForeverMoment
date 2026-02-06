@@ -1,11 +1,10 @@
-package com.example.moment_forever.core.controller;
+package com.example.moment_forever.core.controller.pub;
 
 import com.example.moment_forever.common.response.ApiResponse;
 import com.example.moment_forever.common.response.ResponseUtil;
 import com.example.moment_forever.common.utils.AppConstants;
 import com.example.moment_forever.core.dto.CategoryDto;
 import com.example.moment_forever.core.services.CategoryService;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,19 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/categories")
+@RequestMapping("/public/categories")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
-
-    @PostMapping
-    public ResponseEntity<ApiResponse<?>> createCategory(@RequestBody CategoryDto categoryDto) {
-        CategoryDto categoryResponse = categoryService.createCategory(categoryDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ResponseUtil.buildCreatedResponse(categoryResponse, AppConstants.MSG_CREATED));
-
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<?>> getCategoryById(@PathVariable Long id) {
@@ -45,23 +36,5 @@ public class CategoryController {
         );
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> updateCategory(
-            @PathVariable Long id,
-            @RequestBody CategoryDto categoryDto) {
-        CategoryDto updateCategory = categoryService.updateCategory(id, categoryDto);
-        return ResponseEntity.ok(
-                ResponseUtil.buildOkResponse(updateCategory, AppConstants.MSG_UPDATED)
-        );
-    }
-
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategory(id);
-        return ResponseEntity.ok(
-                ResponseUtil.buildOkResponse(null, AppConstants.MSG_DELETED)
-        );
-    }
 
 }
