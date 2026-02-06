@@ -68,7 +68,6 @@ public class JwtService {
         claims.put("enabled", authUser.isEnabled());
         claims.put("accountNonLocked", authUser.isAccountNonLocked());
 
-        // Build and return the token
         return buildToken(claims, authUser.getUsername(), jwtExpiration);
     }
 

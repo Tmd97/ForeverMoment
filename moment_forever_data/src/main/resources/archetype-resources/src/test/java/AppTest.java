@@ -5,15 +5,15 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Unit test for simple App.
+ * Unit jwt_exception_handler for simple App.
  */
 public class AppTest 
     extends TestCase
 {
     /**
-     * Create the test case
+     * Create the jwt_exception_handler case
      *
-     * @param testName name of the test case
+     * @param testName name of the jwt_exception_handler case
      */
     public AppTest( String testName )
     {

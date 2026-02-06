@@ -1,5 +1,6 @@
 package com.example.moment_forever.security.config;
 
+import com.example.moment_forever.common.errorhandler.CustomAuthException;
 import com.example.moment_forever.data.dao.ApplicationUserDao;
 import com.example.moment_forever.data.dao.auth.AuthUserDao;
 import com.example.moment_forever.data.dao.auth.AuthUserRoleDao;
@@ -57,7 +58,7 @@ public class AuthService {
         validateEmailNotExists(request.getEmail());
         // Step 1: Create and save AuthUser
         AuthUser authUser = createAuthUser(request);  // Transient
-        // ENCODE THE PASSWORD HERE!
+        // TODO: (encoding to be done) ENCODE THE PASSWORD HERE!
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         authUser.setPassword(encodedPassword);
         AuthUser savedAuthUser = authUserDao.save(authUser);  // Now MANAGED
@@ -121,7 +122,7 @@ public class AuthService {
     private void validateEmailNotExists(String email) {
         if (authUserDao.findByUsername(email).isPresent()) {
             logger.warn("Registration failed: Email already exists - {}", email);
-            throw new IllegalArgumentException("Email already in use: " + email);
+            throw new CustomAuthException("Email already in use: " + email);
         }
     }
 
@@ -130,7 +131,7 @@ public class AuthService {
         Optional<AuthUser> authUserOptional = authUserDao.findByUsername(request.getEmail());
         if (authUserOptional.isEmpty()) {
             logger.warn("Login failed: User not found - {}", request.getEmail());
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new CustomAuthException("Please register before logging in. User not found: " + request.getEmail());
         }
         AuthUser authUser = authUserOptional.get();
         validateUserCredentials(request, authUser);
@@ -147,7 +148,7 @@ public class AuthService {
         PasswordEncoder passwordEncoder = this.passwordEncoder;
         if (!passwordEncoder.matches(request.getPassword(), authUser.getPassword())) {
             logger.warn("Login failed: Invalid password for user - {}", request.getEmail());
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new CustomAuthException("Invalid email or password");
         }
     }
 

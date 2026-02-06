@@ -6,7 +6,6 @@ public class AuthBeanMapper {
     public static AuthUser mapDtoToEntity(RegisterRequest registerRequest) {
         AuthUser authUser= new AuthUser();
         authUser.setUsername(registerRequest.getEmail());
-        authUser.setUsername(registerRequest.getFullName());
         authUser.setPassword(registerRequest.getPassword());
         authUser.setAccountNonExpired(true);
         authUser.setAccountNonLocked(true);

@@ -1,4 +1,6 @@
 package com.example.moment_forever.security.config;
+import com.example.moment_forever.common.response.ApiResponse;
+import com.example.moment_forever.common.response.ResponseUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +19,16 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println(">>> AuthController CREATED");
-    }
-
-
-
     /**
      * Register a new user
      * POST /api/auth/register
      */
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(
+    public ResponseEntity<ApiResponse<?>> register(
             @Valid @RequestBody RegisterRequest request) {
 
         AuthResponse response = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseUtil.buildCreatedResponse(response,"User registered successfully"));
     }
 
     /**
@@ -41,11 +36,11 @@ public class AuthController {
      * POST /api/auth/login
      */
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
+    public ResponseEntity<ApiResponse<?>> login(
             @Valid @RequestBody LoginRequest request) {
 
         AuthResponse response = authService.login(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseUtil.buildOkResponse(response,"User logged in successfully"));
     }
 
     /**
@@ -84,7 +79,7 @@ public class AuthController {
 
     /**
      * Check if email is available
-     * GET /api/auth/check-email?email=test@example.com
+     * GET /api/auth/check-email?email=jwt_exception_handler@example.com
      */
 //    @GetMapping("/check-email")
 //    public ResponseEntity<Boolean> checkEmailAvailable(
@@ -95,7 +90,7 @@ public class AuthController {
 //    }
 
     /**
-     * Public endpoint to test if API is running
+     * Public endpoint to jwt_exception_handler if API is running
      * GET /api/auth/health
      */
     @GetMapping("/health")

@@ -9,12 +9,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 
 /**
- * AdditionalSeederConfig - Creates test data for development environment
+ * AdditionalSeederConfig - Creates jwt_exception_handler data for development environment
  *
  * Why @Profile("dev")?
  * - Only runs in "dev" profile, not in production
- * - Creates test users for development/testing
- * - Separates test data from production seeders
+ * - Creates jwt_exception_handler users for development/testing
+ * - Separates jwt_exception_handler data from production seeders
  */
 @Configuration
 @Profile("dev") // Only active when spring.profiles.active=dev
@@ -25,24 +25,24 @@ public class AdditionalSeederConfig {
     public CommandLineRunner devDataSeeder(RoleDao roleRepository,
                                            AuthUserDao authUserRepository) {
         return args -> {
-            System.out.println("=== Creating development test data ===");
+            System.out.println("=== Creating development jwt_exception_handler data ===");
 
-            // 1. Create a test admin user
+            // 1. Create a jwt_exception_handler admin user
             createTestAdmin(roleRepository, authUserRepository);
 
-            // 2. Create a test regular user
+            // 2. Create a jwt_exception_handler regular user
             createTestUser(roleRepository, authUserRepository);
 
-            System.out.println("=== Development test data created ===");
+            System.out.println("=== Development jwt_exception_handler data created ===");
         };
     }
 
     private void createTestAdmin(RoleDao roleDao,
                                  AuthUserDao authUserRepository) {
 
-        // Check if test admin already exists
+        // Check if jwt_exception_handler admin already exists
         if (!authUserRepository.existsByUsername("admin@cherishx.com")) {
-            System.out.println("Creating test admin: admin@cherishx.com / admin123");
+            System.out.println("Creating jwt_exception_handler admin: admin@cherishx.com / admin123");
 
             // In real implementation, you would:
             // 1. Create AuthUser with encoded password
@@ -55,8 +55,8 @@ public class AdditionalSeederConfig {
     private void createTestUser(RoleDao roleDao,
                                 AuthUserDao authUserDao) {
 
-        if (!authUserDao.existsByUsername("user@test.com")) {
-            System.out.println("Creating test user: user@test.com / user123");
+        if (!authUserDao.existsByUsername("user@jwt_exception_handler.com")) {
+            System.out.println("Creating jwt_exception_handler user: user@jwt_exception_handler.com / user123");
         }
     }
 }
