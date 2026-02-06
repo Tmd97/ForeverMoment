@@ -85,7 +85,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**"   // Swagger resources
                         ).permitAll()
                         //2. Admin endpoints
-                        .requestMatchers("/admin/**", "/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
 
                         // 3. User endpoints
                         .requestMatchers(

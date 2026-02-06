@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/jwt_exception_handler/categories")
+@RequestMapping("/admin/categories")
 public class CategoryController {
 
     @Autowired
