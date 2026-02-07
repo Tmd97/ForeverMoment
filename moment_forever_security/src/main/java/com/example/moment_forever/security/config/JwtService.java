@@ -9,6 +9,7 @@ import com.example.moment_forever.data.entities.auth.RefreshToken;
 import com.example.moment_forever.data.entities.auth.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,7 +121,10 @@ public class JwtService {
 
         RefreshToken token = new RefreshToken();
         token.setUser(user);
-        token.setTokenHash(hashToken(rawToken));
+        String hashedRefreshedToken = hashToken(rawToken);
+        logger.debug("refresh token hash value while login {}", hashedRefreshedToken);
+        //token.setTokenHash(hashToken(hashedRefreshedToken));
+        token.setTokenHash(hashedRefreshedToken);
         token.setCreatedAt(LocalDateTime.now());
         token.setExpiryDate(
                 LocalDateTime.now().plus(refreshExpiration, ChronoUnit.MILLIS)
@@ -337,5 +341,18 @@ public class JwtService {
             logger.debug("Failed to generate token from refresh token: {}", e.getMessage());
             throw new CustomAuthException("Invalid refresh token");
         }
+    }
+
+    @Transactional
+    public void revokeRefreshToken(String rawToken) {
+        String tokenHash = hashToken(rawToken);
+        logger.debug("Revoking refresh token with hash: {}", tokenHash);
+        RefreshToken storedToken = refreshTokenDao
+                .findByTokenHashAndRevokedFalse(tokenHash);
+        if (storedToken == null) {
+            throw new CustomAuthException("Invalid refresh token");
+        }
+        storedToken.setRevoked(true);
+        refreshTokenDao.save(storedToken);
     }
 }

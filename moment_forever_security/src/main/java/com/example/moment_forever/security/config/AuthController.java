@@ -63,18 +63,17 @@ public class AuthController {
      * Logout user (invalidate token)
      * POST /api/auth/logout
      */
-//    @PostMapping("/logout")
-//    public ResponseEntity<Void> logout(
-//            @RequestHeader("Authorization") String token) {
-//
-//        // Remove "Bearer " prefix if present
-//        if (token.startsWith("Bearer ")) {
-//            token = token.substring(7);
-//        }
-//
-//        authService.logout(token);
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            @RequestHeader("Authorization") String token) {
+
+        // Remove "Bearer " prefix if present
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        authService.logout(token);
+        return ResponseEntity.ok().build();
+    }
 
     /**
      * Check if email is available

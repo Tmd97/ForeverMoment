@@ -1,6 +1,8 @@
 package com.example.moment_forever.security.config;
 
 import com.example.moment_forever.common.errorhandler.CustomAuthException;
+import com.example.moment_forever.common.response.ApiResponse;
+import com.example.moment_forever.common.response.ResponseUtil;
 import com.example.moment_forever.data.dao.ApplicationUserDao;
 import com.example.moment_forever.data.dao.auth.AuthUserDao;
 import com.example.moment_forever.data.dao.auth.AuthUserRoleDao;
@@ -10,7 +12,6 @@ import com.example.moment_forever.data.entities.auth.AuthUser;
 import com.example.moment_forever.data.entities.auth.AuthUserRole;
 import com.example.moment_forever.data.entities.auth.Role;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -138,6 +139,21 @@ public class AuthService {
         authResponse.setMessage("Login successful");
         return authResponse;
 
+    }
+
+    @Transactional
+    public ApiResponse<?> logout(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new CustomAuthException("Refresh token is required for logout");
+        }
+        try {
+            jwtService.revokeRefreshToken(refreshToken);
+            logger.info("User logged out successfully");
+            return ResponseUtil.buildOkResponse(null, "Logout successful");
+        } catch (Exception e) {
+            logger.error("Logout failed: unable to revoke refresh token", e);
+            throw new CustomAuthException("Logout failed");
+        }
     }
 
     private void validateUserCredentials(@Valid LoginRequest request, AuthUser authUser) {
