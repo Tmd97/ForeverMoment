@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -78,11 +77,11 @@ public class SecurityConfig {
                                 "/auth/**",// All auth endpoints
                                 "/public/**",         // All public endpoints
                                 "/error",                 // Error endpoint
-                                "/swagger-ui/**",         // Swagger UI
-                                "/v3/api-docs/**",        // API docs
-                                "/swagger-ui.html",       // Swagger HTML
-                                "/webjars/**",            // WebJars for Swagger
-                                "/swagger-resources/**"   // Swagger resources
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"           // ← Add this (for Swagger UI assets)
                         ).permitAll()
                         //2. Admin endpoints
                         .requestMatchers("/admin/**").hasRole("ADMIN")

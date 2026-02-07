@@ -26,15 +26,13 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(err -> err.getField() + ": " + err.getDefaultMessage())
                 .collect(Collectors.toList());
-
         log.warn("Validation failed: {}", errors);
-
         return ResponseEntity
                 .badRequest()
                 .body(ResponseUtil.buildValidationErrorResponse("validation failed",errors));
     }
 
-    // 2️⃣ Handle illegal arguments (business validation)
+    // 2️⃣ Handle Business Validation logic exceptions
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
         log.warn("Illegal argument: {}", ex.getMessage());
@@ -53,16 +51,16 @@ public class GlobalExceptionHandler {
     }
 
     // 4️⃣ Handle other runtime exceptions
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException ex) {
-        log.error("Unexpected runtime exception", ex);
+    @ExceptionHandler(CustomAuthException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCustomAuthException(RuntimeException ex) {
+        log.error("Unexpected auth exception", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ResponseUtil.buildErrorResponse("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR));
+                .body(ResponseUtil.buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     // 5️⃣ Optional: Catch-all for any other exceptions
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleAllExceptions(Exception ex) {
         log.error("Unexpected exception", ex);
         return ResponseEntity

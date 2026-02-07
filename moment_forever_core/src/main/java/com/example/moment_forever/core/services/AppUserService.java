@@ -114,9 +114,6 @@ public class AppUserService {
             authUser = (UserDetails) o;
             String email = authUser.getUsername();
             Optional<AuthUser> authUserOptional = authUserDao.findByUsername(email);
-            if (authUserOptional.isEmpty()) {
-                throw new ResourceNotFoundException("Current authenticated user not found in AuthUser table");
-            }
             ApplicationUser applicationUser = applicationUserDao.findById(authUserOptional.get().getId());
 
             return ApplicationUserBeanMapper.mapEntityToDto(applicationUser);

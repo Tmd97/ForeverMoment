@@ -10,6 +10,7 @@ import com.example.moment_forever.data.entities.auth.AuthUser;
 import com.example.moment_forever.data.entities.auth.AuthUserRole;
 import com.example.moment_forever.data.entities.auth.Role;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,14 +33,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public AuthService(
-            AuthenticationManager authenticationManager,
-            AuthUserDao authUserDao,
-            AuthUserRoleDao authUserRoleDao,
-            ApplicationUserDao applicationUserDao,
-            RoleDao roleDao,
-            PasswordEncoder passwordEncoder,
-            JwtService jwtService) {
+    public AuthService(AuthenticationManager authenticationManager, AuthUserDao authUserDao, AuthUserRoleDao authUserRoleDao, ApplicationUserDao applicationUserDao, RoleDao roleDao, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.authUserDao = authUserDao;
         this.authUserRoleDao = authUserRoleDao;
@@ -73,20 +67,19 @@ public class AuthService {
 
         // Step 4: Map ROLE_USER to the new AuthUser
         Optional<Role> roleOptional = roleDao.findByNameIgnoreCase(request.getRole());
+        if (roleOptional.isEmpty()) {
+            logger.warn("Role not found during registration: {}. Defaulting to ROLE_USER", request.getRole());
+            throw new CustomAuthException("Specified role not found. Allowed values: USER, ADMIN");
+        }
         Role role = roleOptional.get();
-        if (role.getName().equalsIgnoreCase("USER") || role.getName().equalsIgnoreCase("ADMIN")) {
-            AuthUserRole authUserRole = new AuthUserRole();
-            authUserRole.setAuthUser(savedAuthUser);
-            authUserRole.setRole(role);
-            try {
-                authUserRoleDao.save(authUserRole);
-            } catch (Exception e) {
-                logger.error("Error assigning ROLE_USER to AuthUser id: {}", savedAuthUser.getId(), e);
-                throw new RuntimeException("Internal server error during registration");
-            }
-        } else {
-            logger.warn("Invalid role specified during registration: {}. Defaulting to ROLE_USER", request.getRole());
-            throw new CustomAuthException("Invalid role specified. Allowed values: USER, ADMIN");
+        AuthUserRole authUserRole = new AuthUserRole();
+        authUserRole.setAuthUser(savedAuthUser);
+        authUserRole.setRole(role);
+        try {
+            authUserRoleDao.save(authUserRole);
+        } catch (Exception e) {
+            logger.error("Error assigning ROLE_USER to AuthUser id: {}", savedAuthUser.getId(), e);
+            throw new RuntimeException("Internal server error during registration");
         }
         return buildRegistrationResponseWithoutToken(savedAuthUser, savedAppUser);
     }
@@ -116,12 +109,12 @@ public class AuthService {
             return AuthBeanMapper.mapDtoToEntity(request);
         } catch (Exception e) {
             logger.error("Error mapping RegisterRequest to AuthUser entity", e);
-            throw new RuntimeException("Internal server error during registration");
+            throw new CustomAuthException("Internal server error during registration");
         }
     }
 
     private void validateEmailNotExists(String email) {
-        if (authUserDao.findByUsername(email).isPresent()) {
+        if (authUserDao.existsByUsername(email)) {
             logger.warn("Registration failed: Email already exists - {}", email);
             throw new CustomAuthException("Email already in use: " + email);
         }
@@ -162,6 +155,7 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public AuthResponse generateRefreshToken(String oldRefreshToken) {
         return jwtService.generateRefreshTokenWithAccessToken(oldRefreshToken);
     }
