@@ -20,8 +20,11 @@ public class RegisterRequest {
     private String phoneNumber;
     private String preferredCity;
 
+    private String role; // Optional: role can be set by admin or default to "USER"
+
     // Constructors
-    public RegisterRequest() {}
+    public RegisterRequest() {
+    }
 
     public RegisterRequest(String email, String password, String fullName) {
         this.email = email;
@@ -29,18 +32,52 @@ public class RegisterRequest {
         this.fullName = fullName;
     }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getPreferredCity() { return preferredCity; }
-    public void setPreferredCity(String preferredCity) { this.preferredCity = preferredCity; }
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPreferredCity() {
+        return preferredCity;
+    }
+
+    public void setPreferredCity(String preferredCity) {
+        this.preferredCity = preferredCity;
+    }
+
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

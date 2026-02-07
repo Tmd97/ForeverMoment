@@ -72,7 +72,7 @@ public class AuthService {
         savedAppUser.setAuthUserId(savedAuthUser.getId());      // Auto-tracked
 
         // Step 4: Map ROLE_USER to the new AuthUser
-        Optional<Role> roleOptional = roleDao.findByNameIgnoreCase("USER");
+        Optional<Role> roleOptional = roleDao.findByNameIgnoreCase(request.getRole());
         if (roleOptional.isEmpty()) {
             logger.error("ROLE_USER not found in the database");
             throw new RuntimeException("Internal server error during registration as USER role is missing");
