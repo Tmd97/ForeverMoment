@@ -142,14 +142,13 @@ public class AuthService {
     }
 
     @Transactional
-    public ApiResponse<?> logout(String refreshToken) {
+    public void logout(String refreshToken) {
         if (refreshToken == null || refreshToken.isBlank()) {
             throw new CustomAuthException("Refresh token is required for logout");
         }
         try {
             jwtService.revokeRefreshToken(refreshToken);
             logger.info("User logged out successfully");
-            return ResponseUtil.buildOkResponse(null, "Logout successful");
         } catch (Exception e) {
             logger.error("Logout failed: unable to revoke refresh token", e);
             throw new CustomAuthException("Logout failed");
