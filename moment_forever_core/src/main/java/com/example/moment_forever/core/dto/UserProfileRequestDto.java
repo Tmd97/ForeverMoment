@@ -2,6 +2,7 @@ package com.example.moment_forever.core.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ public class UserProfileRequestDto {
     @Size(max = 150)
     private String email;
 
-    @Size(max = 20)
+    @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Invalid phone number")
     private String phoneNumber;
 
     @Size(max = 500)

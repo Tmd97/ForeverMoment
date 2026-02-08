@@ -56,10 +56,10 @@ public class AdminUserController {
         );
     }
 
-    @PostMapping("/deleteProfile")
-    public ResponseEntity<ApiResponse<?>> deleteProfile(Long userId) {
+    @DeleteMapping("/profile/{userId}")
+    public ResponseEntity<ApiResponse<?>> deleteProfile(@PathVariable Long userId) {
         appUserService.deleteUserProfile(userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseUtil.buildOkResponse(null, "User Profile deleted successfully"));
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/deleteAccount")

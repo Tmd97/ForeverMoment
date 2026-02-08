@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class RegisterRequestDto extends NamedEntity {
+public class RegisterRequestDto {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Valid email is required")

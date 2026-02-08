@@ -10,9 +10,11 @@ import com.example.moment_forever.data.dao.auth.RefreshTokenDao;
 import com.example.moment_forever.data.entities.ApplicationUser;
 import com.example.moment_forever.data.entities.auth.AuthUser;
 import com.example.moment_forever.data.entities.auth.RefreshToken;
+import com.example.moment_forever.security.config.PasswordConfig;
 import com.example.moment_forever.security.service.JwtService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +28,7 @@ import java.util.List;
 @Service
 public class UserProfileService {
 
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UserProfileService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserProfileService.class);
 
     @Autowired
     private ApplicationUserDao applicationUserDao;
@@ -39,6 +41,9 @@ public class UserProfileService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private PasswordConfig passwordEncoder;
 
     @Transactional
     public ApplicationUserDto updateCurrentUserProfile(@Valid UserProfileRequestDto userProfileRequestDto) {
@@ -81,7 +86,7 @@ public class UserProfileService {
     }
 
     //delete the user profile of the currently authenticated user, this will delete the authUser and cascade delete the applicationUser as well
-    public void deleteCurrentUserProfile() {
+    public void deleteCurrentUserProfile(String password) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new CustomAuthException("No authenticated user");
@@ -94,26 +99,29 @@ public class UserProfileService {
 
         AuthUser userDetails = (AuthUser) o;
         ApplicationUser applicationUser = applicationUserDao.findByAuthUserId(userDetails.getId()).get();
+
+        // Verify password before deletion
+        if (!passwordEncoder.passwordEncoder().matches(password, userDetails.getPassword())) {
+            throw new CustomAuthException("Invalid password");
+        }
         authUserDao.delete(applicationUser.getAuthUser());
     }
 
     @Transactional
-    public void deActivateAccount(String refreshToken) {
-        jwtService.isTokenValid(refreshToken);
-        String hashToken=jwtService.hashToken(refreshToken);
-        RefreshToken storedHashToken = refreshTokenDao.findByTokenHashAndRevokedFalse(hashToken);
-        if (storedHashToken == null) {
-            logger.warn("Deactivation failed: Invalid refresh token - {}", refreshToken);
-            throw new CustomAuthException("Invalid refresh token");
-        }
+    public void deactivateCurrentAccount() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AuthUser authUser = (AuthUser) auth.getPrincipal();
 
-        // revoke ALL refresh tokens for security(All sessions) and lock the user account
-        List<RefreshToken> refreshTokenList=refreshTokenDao.findByAuthUserIdAndRevokedFalse(storedHashToken.getUser().getId());
+        authUser.setAccountNonLocked(false);
+        authUserDao.update(authUser);
 
-        storedHashToken.getUser().setAccountNonLocked(false);
-        storedHashToken.setRevoked(true);
-        storedHashToken.getUser().setCredentialsNonExpired(true);
-        storedHashToken.setExpiryDate(LocalDateTime.now());
-        logger.info("User account deActivated successfully for userId: {}", storedHashToken.getUser().getUsername());
+        // Revoke all refresh tokens for this user
+        List<RefreshToken> tokens = refreshTokenDao
+                .findByAuthUserIdAndRevokedFalse(authUser.getId());
+        tokens.forEach(token -> {
+            token.setRevoked(true);
+            refreshTokenDao.save(token);
+        });
+        logger.info("User account deActivated successfully for userId: {}",authUser.getUsername());
     }
 }

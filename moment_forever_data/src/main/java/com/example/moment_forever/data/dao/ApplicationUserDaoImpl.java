@@ -116,7 +116,9 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
     }
 
     @Override
-    public void deleteByAppUserId(Long id) {
-        // Write type safe delete query to avoid loading the entity before deletion
+    public void deleteByAppUserId(Long authUserId) {
+        em.createQuery("DELETE FROM ApplicationUser a WHERE a.authUser.id = :authUserId")
+                .setParameter("authUserId", authUserId)
+                .executeUpdate();
     }
 }

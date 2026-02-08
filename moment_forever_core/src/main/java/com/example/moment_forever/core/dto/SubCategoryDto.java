@@ -2,6 +2,7 @@ package com.example.moment_forever.core.dto;
 
 public class SubCategoryDto {
 
+    private Long id;
     private String name;
     private String description;
     private String slug;
@@ -24,6 +25,18 @@ public class SubCategoryDto {
     }
 
     // Getters and Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
 
     public String getName() {
         return name;

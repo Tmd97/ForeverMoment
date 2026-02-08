@@ -35,14 +35,14 @@ public class UserProfileController {
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<?>> deleteMe() {
-        userService.deleteCurrentUserProfile();
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseUtil.buildOkResponse(null, "User profile deleted"));
+    public ResponseEntity<ApiResponse<?>> deleteMe(@RequestParam String confirmPassword) {
+        userService.deleteCurrentUserProfile(confirmPassword);
+        return ResponseEntity.noContent().build();
     }
 
     // delete account endpoint, which will invalidate all tokens for the user and delete the user account
     //TODO: delete account can be delete via emailId, or username or refresh token
-    @PostMapping("/deActivateAccount")
+    @PostMapping("/deactivate")
     public ResponseEntity<ApiResponse<?>> deActivateAccount(
             @RequestHeader("Authorization") String token) {
         userService.deActivateAccount(token);
