@@ -1,7 +1,9 @@
 package com.example.moment_forever.data.dao.auth;
 
+import com.example.moment_forever.common.errorhandler.ResourceNotFoundException;
 import com.example.moment_forever.data.dao.GenericDaoImpl;
 import com.example.moment_forever.data.entities.auth.RefreshToken;
+import jakarta.persistence.NoResultException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +31,8 @@ public class RefreshTokenDaoImpl extends GenericDaoImpl<RefreshToken, Long> impl
                     .setParameter("tokenHash", tokenHash)
                     .getSingleResult();
 
-        } catch (NoSuchElementException e) {
-            throw new NoSuchElementException("No refresh token found for token hash: " + tokenHash);
+        } catch (NoResultException e) {
+            throw new ResourceNotFoundException("No refresh token found for token hash: " + tokenHash);
         }
     }
 
@@ -38,16 +40,16 @@ public class RefreshTokenDaoImpl extends GenericDaoImpl<RefreshToken, Long> impl
     public List<RefreshToken> findByAuthUserIdAndRevokedFalse(Long authUserId) {
         try {
             return em.createQuery(
-                            "SELECT rt FROM RefreshToken rt " +
-                                    "WHERE rt.authUserId = :authUserId " +
-                                    "AND rt.revoked = false",
-                            RefreshToken.class
+                    "SELECT rt FROM RefreshToken rt " +
+                            "WHERE rt.authUser.id = :authUserId " +
+                            "AND rt.revoked = false",
+                    RefreshToken.class
                     )
                     .setParameter("authUserId", authUserId)
                     .getResultList();
 
-        } catch (NoSuchElementException e) {
-            throw new NoSuchElementException("No refresh token found for auth user id: " + authUserId);
+        } catch (NoResultException e) {
+            throw new ResourceNotFoundException("No refresh token found for auth user id: " + authUserId);
         }
 
     }

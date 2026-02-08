@@ -1,8 +1,8 @@
 package com.example.moment_forever.core.services;
 
 import com.example.moment_forever.common.errorhandler.CustomAuthException;
-import com.example.moment_forever.core.dto.ApplicationUserDto;
-import com.example.moment_forever.core.dto.UserProfileRequestDto;
+import com.example.moment_forever.core.dto.response.AppUserResponseDto;
+import com.example.moment_forever.core.dto.request.UserProfileRequestDto;
 import com.example.moment_forever.core.mapper.ApplicationUserBeanMapper;
 import com.example.moment_forever.data.dao.ApplicationUserDao;
 import com.example.moment_forever.data.dao.auth.AuthUserDao;
@@ -11,6 +11,7 @@ import com.example.moment_forever.data.entities.ApplicationUser;
 import com.example.moment_forever.data.entities.auth.AuthUser;
 import com.example.moment_forever.data.entities.auth.RefreshToken;
 import com.example.moment_forever.security.config.PasswordConfig;
+import com.example.moment_forever.security.dto.JwtUserDetails;
 import com.example.moment_forever.security.service.JwtService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -22,7 +23,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -46,11 +46,11 @@ public class UserProfileService {
     private PasswordConfig passwordEncoder;
 
     @Transactional
-    public ApplicationUserDto updateCurrentUserProfile(@Valid UserProfileRequestDto userProfileRequestDto) {
+    public AppUserResponseDto updateCurrentUserProfile(@Valid UserProfileRequestDto userProfileRequestDto) {
         Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (o instanceof UserDetails) {
-            AuthUser userDetails = (AuthUser) o;
-            ApplicationUser applicationUser = applicationUserDao.findByAuthUserId(userDetails.getId()).get();
+            JwtUserDetails jwtUserDetails = (JwtUserDetails) o;
+            ApplicationUser applicationUser = applicationUserDao.findById(jwtUserDetails.getId());
 
             // Update fields
             applicationUser.setFullName(userProfileRequestDto.getFullName());
@@ -68,7 +68,7 @@ public class UserProfileService {
         throw new RuntimeException("User not authenticated");
     }
 
-    public ApplicationUserDto getCurrentUserProfile() {
+    public AppUserResponseDto getCurrentUserProfile() {
         // Add null check
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -80,8 +80,8 @@ public class UserProfileService {
             throw new CustomAuthException("Invalid principal type");
         }
 
-        AuthUser userDetails = (AuthUser) o;
-        ApplicationUser applicationUser = applicationUserDao.findByAuthUserId(userDetails.getId()).get();
+        JwtUserDetails jwtUserDetails = (JwtUserDetails) o;
+        ApplicationUser applicationUser = applicationUserDao.findById(jwtUserDetails.getId());
         return ApplicationUserBeanMapper.mapEntityToDto(applicationUser);
     }
 
@@ -97,21 +97,27 @@ public class UserProfileService {
             throw new CustomAuthException("Invalid principal type");
         }
 
-        AuthUser userDetails = (AuthUser) o;
-        ApplicationUser applicationUser = applicationUserDao.findByAuthUserId(userDetails.getId()).get();
+        JwtUserDetails jwtUserDetails = (JwtUserDetails) o;
+        ApplicationUser applicationUser = applicationUserDao.findById(jwtUserDetails.getId());
 
         // Verify password before deletion
-        if (!passwordEncoder.passwordEncoder().matches(password, userDetails.getPassword())) {
+        if (!passwordEncoder.passwordEncoder().matches(password, jwtUserDetails.getPassword())) {
             throw new CustomAuthException("Invalid password");
         }
         authUserDao.delete(applicationUser.getAuthUser());
     }
 
     @Transactional
-    public void deactivateCurrentAccount() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        AuthUser authUser = (AuthUser) auth.getPrincipal();
+    public void deactivateCurrentAccount(String refreshToken) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        Object o = authentication.getPrincipal();
+        if (!(o instanceof UserDetails)) {
+            throw new CustomAuthException("Invalid principal type");
+        }
+        JwtUserDetails jwtUserDetails = (JwtUserDetails) o;
+        ApplicationUser applicationUser = applicationUserDao.findById(jwtUserDetails.getId());
+        AuthUser authUser = applicationUser.getAuthUser();
         authUser.setAccountNonLocked(false);
         authUserDao.update(authUser);
 
@@ -122,6 +128,6 @@ public class UserProfileService {
             token.setRevoked(true);
             refreshTokenDao.save(token);
         });
-        logger.info("User account deActivated successfully for userId: {}",authUser.getUsername());
+        logger.info("User account deActivated successfully for userId: {}", authUser.getUsername());
     }
 }

@@ -3,7 +3,8 @@ package com.example.moment_forever.core.controller.admin;
 import com.example.moment_forever.common.response.ApiResponse;
 import com.example.moment_forever.common.response.ResponseUtil;
 import com.example.moment_forever.common.utils.AppConstants;
-import com.example.moment_forever.core.dto.SubCategoryDto;
+import com.example.moment_forever.core.dto.request.SubCategoryRequestDto;
+import com.example.moment_forever.core.dto.response.SubCategoryResponseDto;
 import com.example.moment_forever.core.services.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,15 +21,15 @@ public class SubCategoryControllerAdmin {
     private SubCategoryService subCategoryService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> createSubCategory(@RequestBody SubCategoryDto subCategoryDto) {
-        SubCategoryDto subCategoryResponse = subCategoryService.createSubCategory(subCategoryDto);
+    public ResponseEntity<ApiResponse<?>> createSubCategory(@RequestBody SubCategoryRequestDto subCategoryRequestDto) {
+        SubCategoryResponseDto subCategoryResponse = subCategoryService.createSubCategory(subCategoryRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseUtil.buildCreatedResponse(subCategoryResponse, AppConstants.MSG_CREATED));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<?>> getSubCategoryById(@PathVariable Long id) {
-        SubCategoryDto subCategoryResponse = subCategoryService.getById(id);
+        SubCategoryResponseDto subCategoryResponse = subCategoryService.getById(id);
         return ResponseEntity.ok(
                 ResponseUtil.buildOkResponse(subCategoryResponse, AppConstants.MSG_FETCHED)
         );
@@ -36,7 +37,7 @@ public class SubCategoryControllerAdmin {
 
     @GetMapping("/slug/{slug}")
     public ResponseEntity<ApiResponse<?>> getSubCategoryBySlug(@PathVariable String slug) {
-        SubCategoryDto subCategoryResponse = subCategoryService.getBySlug(slug);
+        SubCategoryResponseDto subCategoryResponse = subCategoryService.getBySlug(slug);
         return ResponseEntity.ok(
                 ResponseUtil.buildOkResponse(subCategoryResponse, AppConstants.MSG_FETCHED)
         );
@@ -44,27 +45,27 @@ public class SubCategoryControllerAdmin {
 
     @GetMapping
     public ResponseEntity<ApiResponse<?>> getAllSubCategories() {
-        List<SubCategoryDto> subCategoryDtos = subCategoryService.getAll();
+        List<SubCategoryResponseDto> subCategoryResponse = subCategoryService.getAll();
         return ResponseEntity.ok(
-                ResponseUtil.buildOkResponse(subCategoryDtos, AppConstants.MSG_FETCHED)
+                ResponseUtil.buildOkResponse(subCategoryResponse, AppConstants.MSG_FETCHED)
         );
     }
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<ApiResponse<?>> getSubCategoriesByCategory(@PathVariable Long categoryId) {
-        List<SubCategoryDto> subCategoryDtoList = subCategoryService.getByCategoryId(categoryId);
+        List<SubCategoryResponseDto> subCategoryResponseList = subCategoryService.getByCategoryId(categoryId);
         return ResponseEntity.ok(
-                ResponseUtil.buildOkResponse(subCategoryDtoList, AppConstants.MSG_FETCHED)
+                ResponseUtil.buildOkResponse(subCategoryResponseList, AppConstants.MSG_FETCHED)
         );
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<?>> updateSubCategory(
             @PathVariable Long id,
-            @RequestBody SubCategoryDto subCategoryDto) {
-        SubCategoryDto updatedSubCategory = subCategoryService.updateSubCategory(id, subCategoryDto);
+            @RequestBody SubCategoryRequestDto subCategoryDto) {
+        SubCategoryResponseDto subCategoryResponseDto = subCategoryService.updateSubCategory(id, subCategoryDto);
         return ResponseEntity.ok(
-                ResponseUtil.buildOkResponse(updatedSubCategory, AppConstants.MSG_UPDATED)
+                ResponseUtil.buildOkResponse(subCategoryResponseDto, AppConstants.MSG_UPDATED)
         );
     }
 

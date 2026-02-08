@@ -2,13 +2,12 @@ package com.example.moment_forever.core.services;
 
 import com.example.moment_forever.common.errorhandler.CustomAuthException;
 import com.example.moment_forever.common.errorhandler.ResourceNotFoundException;
-import com.example.moment_forever.core.dto.ApplicationUserDto;
-import com.example.moment_forever.core.dto.UserProfileRequestDto;
+import com.example.moment_forever.core.dto.response.AppUserResponseDto;
+import com.example.moment_forever.core.dto.request.UserProfileRequestDto;
 import com.example.moment_forever.core.mapper.ApplicationUserBeanMapper;
 import com.example.moment_forever.data.dao.ApplicationUserDao;
 import com.example.moment_forever.data.dao.auth.AuthUserDao;
 import com.example.moment_forever.data.entities.ApplicationUser;
-import com.example.moment_forever.data.entities.auth.AuthUser;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class AdminUserService {
     private AuthUserDao authUserDao;
 
     @Transactional(readOnly = true)
-    public ApplicationUserDto getAppUserById(Long id) {
+    public AppUserResponseDto getAppUserById(Long id) {
         ApplicationUser appUser = applicationUserDao.findById(id);
         if (appUser == null) {
             throw new ResourceNotFoundException("No User exist given Id exist " + id);
@@ -39,7 +38,7 @@ public class AdminUserService {
     }
 
     @Transactional(readOnly = true)
-    public ApplicationUserDto getAppUserByEmailId(String email) {
+    public AppUserResponseDto getAppUserByEmailId(String email) {
         Optional<ApplicationUser> appUser = applicationUserDao.findByEmailIgnoreCase(email);
         if (appUser.isEmpty()) {
             throw new ResourceNotFoundException("No User exist given email exist " + email);
@@ -48,7 +47,7 @@ public class AdminUserService {
     }
 
     @Transactional(readOnly = true)
-    public List<ApplicationUserDto> getAllAppUser() {
+    public List<AppUserResponseDto> getAllAppUser() {
         List<ApplicationUser> applicationUsers = applicationUserDao.findAll();
         if (applicationUsers == null || applicationUsers.size() == 0) {
             throw new ResourceNotFoundException("users doesn't exist");
@@ -59,7 +58,7 @@ public class AdminUserService {
     }
 
     @Transactional
-    public ApplicationUserDto updateAppUser(Long userId, UserProfileRequestDto userDto) {
+    public AppUserResponseDto updateAppUser(Long userId, UserProfileRequestDto userDto) {
         ApplicationUser existing = applicationUserDao.findById(userId);
         if (existing == null) {
             throw new ResourceNotFoundException("No such user for given Id exist " + userId);

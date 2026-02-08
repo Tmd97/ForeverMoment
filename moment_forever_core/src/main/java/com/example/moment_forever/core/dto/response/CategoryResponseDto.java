@@ -1,43 +1,19 @@
-package com.example.moment_forever.core.dto;
+package com.example.moment_forever.core.dto.response;
+import com.example.moment_forever.core.dto.request.SubCategoryRequestDto;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryDto extends NamedEntityDto {
+public class CategoryResponseDto extends NamedEntityDto {
 
-    private Long id;
-    private String name;
     private String description;
     private String slug;
     private String icon;
     private Integer displayOrder;
     private Boolean isActive;
-    private List<SubCategoryDto> subCategories = new ArrayList<>();
+    private List<SubCategoryResponseDto> subCategories = new ArrayList<>();
 
-    // Constructors
-    public CategoryDto() {}
-
-    public CategoryDto(Long id, String name, String slug) {
-        this.id = id;
-        this.name = name;
-        this.slug = slug;
-    }
-
-    // Getters and Setters
-    public long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    public CategoryResponseDto() {}
 
     public String getDescription() {
         return description;
@@ -79,11 +55,11 @@ public class CategoryDto extends NamedEntityDto {
         this.isActive = isActive;
     }
 
-    public List<SubCategoryDto> getSubCategories() {
+    public List<SubCategoryResponseDto> getSubCategories() {
         return subCategories;
     }
 
-    public void setSubCategories(List<SubCategoryDto> subCategories) {
+    public void setSubCategories(List<SubCategoryResponseDto> subCategories) {
         this.subCategories = subCategories;
     }
 }

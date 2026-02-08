@@ -1,7 +1,7 @@
 package com.example.moment_forever.core.mapper;
 
-import com.example.moment_forever.core.dto.ApplicationUserDto;
-import com.example.moment_forever.core.dto.UserProfileRequestDto;
+import com.example.moment_forever.core.dto.response.AppUserResponseDto;
+import com.example.moment_forever.core.dto.request.UserProfileRequestDto;
 import com.example.moment_forever.data.entities.ApplicationUser;
 
 public class ApplicationUserBeanMapper {
@@ -18,11 +18,11 @@ public class ApplicationUserBeanMapper {
         entity.setPreferredCity(dto.getPreferredCity());
     }
 
-    public static ApplicationUserDto mapEntityToDto(ApplicationUser entity) {
+    public static AppUserResponseDto mapEntityToDto(ApplicationUser entity) {
         if (entity == null) {
             return null;
         }
-        ApplicationUserDto dto = new ApplicationUserDto();
+        AppUserResponseDto dto = new AppUserResponseDto();
         dto.setId(entity.getId());
         dto.setFullName(entity.getFullName());
         dto.setEmail(entity.getEmail());

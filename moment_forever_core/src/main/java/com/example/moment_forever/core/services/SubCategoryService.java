@@ -1,22 +1,23 @@
 package com.example.moment_forever.core.services;
 
-import com.example.moment_forever.core.dto.SubCategoryDto;
-import com.example.moment_forever.data.entities.SubCategory;
+import com.example.moment_forever.core.dto.request.SubCategoryRequestDto;
+import com.example.moment_forever.core.dto.response.SubCategoryResponseDto;
+
 import java.util.List;
 
 public interface SubCategoryService {
 
-    SubCategoryDto createSubCategory(SubCategoryDto subCategoryDto);
+    SubCategoryResponseDto createSubCategory(SubCategoryRequestDto subCategoryDto);
 
-    SubCategoryDto updateSubCategory(Long id, SubCategoryDto subCategoryDto);
+    SubCategoryResponseDto updateSubCategory(Long id, SubCategoryRequestDto subCategoryDto);
 
-    SubCategoryDto getById(Long id);
+    SubCategoryResponseDto getById(Long id);
 
-    SubCategoryDto getBySlug(String slug);
+    SubCategoryResponseDto getBySlug(String slug);
 
-    List<SubCategoryDto> getAll();
+    List<SubCategoryResponseDto> getAll();
 
-    List<SubCategoryDto> getByCategoryId(Long categoryId);
+    List<SubCategoryResponseDto> getByCategoryId(Long categoryId);
 
     boolean deleteSubCategory(Long id);
 }

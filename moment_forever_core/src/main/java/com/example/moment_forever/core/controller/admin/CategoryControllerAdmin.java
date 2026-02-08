@@ -3,7 +3,8 @@ package com.example.moment_forever.core.controller.admin;
 import com.example.moment_forever.common.response.ApiResponse;
 import com.example.moment_forever.common.response.ResponseUtil;
 import com.example.moment_forever.common.utils.AppConstants;
-import com.example.moment_forever.core.dto.CategoryDto;
+import com.example.moment_forever.core.dto.request.CategoryRequestDto;
+import com.example.moment_forever.core.dto.response.CategoryResponseDto;
 import com.example.moment_forever.core.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,8 @@ public class CategoryControllerAdmin {
     private CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> createCategory(@RequestBody CategoryDto categoryDto) {
-        CategoryDto categoryResponse = categoryService.createCategory(categoryDto);
+    public ResponseEntity<ApiResponse<?>> createCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
+        CategoryResponseDto categoryResponse = categoryService.createCategory(categoryRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseUtil.buildCreatedResponse(categoryResponse, AppConstants.MSG_CREATED));
 
@@ -29,7 +30,7 @@ public class CategoryControllerAdmin {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<?>> getCategoryById(@PathVariable Long id) {
-        CategoryDto categoryResponse = categoryService.getById(id);
+        CategoryResponseDto categoryResponse = categoryService.getById(id);
         return ResponseEntity.ok(
                 ResponseUtil.buildOkResponse(categoryResponse, AppConstants.MSG_FETCHED)
         );
@@ -38,7 +39,7 @@ public class CategoryControllerAdmin {
 
     @GetMapping
     public ResponseEntity<ApiResponse<?>> getAllCategories() {
-        List<CategoryDto> categoryDtos = categoryService.getAll();
+        List<CategoryResponseDto> categoryDtos = categoryService.getAll();
         return ResponseEntity.ok(
                 ResponseUtil.buildOkResponse(categoryDtos, AppConstants.MSG_FETCHED)
         );
@@ -47,8 +48,8 @@ public class CategoryControllerAdmin {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<?>> updateCategory(
             @PathVariable Long id,
-            @RequestBody CategoryDto categoryDto) {
-        CategoryDto updateCategory = categoryService.updateCategory(id, categoryDto);
+            @RequestBody CategoryRequestDto categoryRequestDto) {
+        CategoryResponseDto updateCategory = categoryService.updateCategory(id, categoryRequestDto);
         return ResponseEntity.ok(
                 ResponseUtil.buildOkResponse(updateCategory, AppConstants.MSG_UPDATED)
         );

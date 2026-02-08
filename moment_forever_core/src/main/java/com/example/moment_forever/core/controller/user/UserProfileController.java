@@ -2,8 +2,8 @@ package com.example.moment_forever.core.controller.user;
 
 import com.example.moment_forever.common.response.ApiResponse;
 import com.example.moment_forever.common.response.ResponseUtil;
-import com.example.moment_forever.core.dto.ApplicationUserDto;
-import com.example.moment_forever.core.dto.UserProfileRequestDto;
+import com.example.moment_forever.core.dto.response.AppUserResponseDto;
+import com.example.moment_forever.core.dto.request.UserProfileRequestDto;
 import com.example.moment_forever.core.services.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,13 +24,13 @@ public class UserProfileController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<?>> getMe() {
-        ApplicationUserDto currentUser = userService.getCurrentUserProfile();
+        AppUserResponseDto currentUser = userService.getCurrentUserProfile();
         return ResponseEntity.ok(ResponseUtil.buildOkResponse(currentUser, "User profile fetched"));
     }
 
     @PutMapping
     public ResponseEntity<ApiResponse<?>> updateMe(@RequestBody @Valid UserProfileRequestDto userProfileRequestDto) {
-        ApplicationUserDto updatedProfile = userService.updateCurrentUserProfile(userProfileRequestDto);
+        AppUserResponseDto updatedProfile = userService.updateCurrentUserProfile(userProfileRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseUtil.buildCreatedResponse(updatedProfile, "User profile updated"));
     }
 
@@ -45,7 +45,7 @@ public class UserProfileController {
     @PostMapping("/deactivate")
     public ResponseEntity<ApiResponse<?>> deActivateAccount(
             @RequestHeader("Authorization") String token) {
-        userService.deActivateAccount(token);
+        userService.deactivateCurrentAccount(token);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseUtil.buildOkResponse(null, "Account deleted successfully"));
     }
 }

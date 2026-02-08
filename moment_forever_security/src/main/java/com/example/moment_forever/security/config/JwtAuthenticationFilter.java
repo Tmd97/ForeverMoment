@@ -81,7 +81,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = jwtService.buildUserDetailsFromToken(jwt);
 
             // Step 5: Validate token
-            if (jwtService.validateToken(jwt, username)) {
+            if (jwtService.validateToken(jwt)) {
                 logger.debug("Token validation successful for user: {}", username);
 
                 // Step 6: Create Authentication object
@@ -89,7 +89,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null, // credentials are null because we're using token
-                                userDetails.getAuthorities()
+                                userDetails.getAuthorities()  // may cause lazy loading issues if roles are not eagerly fetched, ensure your UserDetails implementation handles this
                         );
 
                 // Add request details to authentication

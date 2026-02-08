@@ -8,6 +8,7 @@ import com.example.moment_forever.data.entities.auth.AuthUserRole;
 import com.example.moment_forever.data.entities.auth.RefreshToken;
 import com.example.moment_forever.data.entities.auth.Role;
 import com.example.moment_forever.security.dto.AuthResponse;
+import com.example.moment_forever.security.dto.JwtUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -118,13 +120,9 @@ public class JwtService {
     }
 
     public void saveNewRefreshToken(AuthUser user, String rawToken) {
-
-
         RefreshToken token = new RefreshToken();
-        token.setUser(user);
+        token.setAuthUser(user);
         String hashedRefreshedToken = hashToken(rawToken);
-        logger.debug("refresh token hash value while login {}", hashedRefreshedToken);
-        //token.setTokenHash(hashToken(hashedRefreshedToken));
         token.setTokenHash(hashedRefreshedToken);
         token.setCreatedAt(LocalDateTime.now());
         token.setExpiryDate(
@@ -224,19 +222,11 @@ public class JwtService {
         }
     }
 
-    /**
-     * Validate token with username comparison
-     * Useful when you already know the expected username
-     */
-    public boolean validateToken(String token, String expectedUsername) {
+    public boolean validateToken(String token) {
         try {
-//            final String username = extractUsername(token);
-//            return username != null &&
-//                    username.equals(expectedUsername) &&
-            return isTokenValid(token); // even to check this
+            return isTokenValid(token);
         } catch (Exception e) {
-            logger.debug("Token validation failed for user {}: {}",
-                    expectedUsername, e.getMessage());
+            logger.debug("Token validation failed for user {}: {}", e.getMessage());
             return false;
         }
     }
@@ -271,6 +261,7 @@ public class JwtService {
         // Reuse existing methods (no duplication)
         String username = extractUsername(token);
         String rolesString = extractRoles(token);
+        Long userId = extractUserId(token);  // Make sure you have this method
 
         var authorities = rolesString == null || rolesString.isBlank()
                 ? java.util.List.<org.springframework.security.core.authority.SimpleGrantedAuthority>of()
@@ -279,12 +270,7 @@ public class JwtService {
                 .filter(role -> !role.isEmpty())
                 .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role))
                 .toList();
-
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(username)
-                .password("")      // password not required for JWT
-                .authorities(authorities)
-                .build();
+        return new JwtUserDetails(userId, username, authorities);
     }
 
     public AuthResponse generateRefreshTokenWithAccessToken(String token) {

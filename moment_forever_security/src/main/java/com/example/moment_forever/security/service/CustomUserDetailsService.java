@@ -2,6 +2,8 @@ package com.example.moment_forever.security.service;
 
 import com.example.moment_forever.data.dao.auth.AuthUserDao;
 import com.example.moment_forever.data.entities.auth.AuthUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CustomUserDetailsService implements UserDetailsService {
 
-//    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
     @Autowired
     private AuthUserDao authUserDao;
 

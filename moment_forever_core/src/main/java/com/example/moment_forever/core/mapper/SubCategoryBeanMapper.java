@@ -1,11 +1,12 @@
 package com.example.moment_forever.core.mapper;
 
-import com.example.moment_forever.core.dto.SubCategoryDto;
+import com.example.moment_forever.core.dto.request.SubCategoryRequestDto;
+import com.example.moment_forever.core.dto.response.SubCategoryResponseDto;
 import com.example.moment_forever.data.entities.SubCategory;
 
 public class SubCategoryBeanMapper {
 
-    public static void mapDtoToEntity(SubCategoryDto dto, SubCategory entity) {
+    public static void mapDtoToEntity(SubCategoryRequestDto dto, SubCategory entity) {
         if (dto == null || entity == null) return;
 
         entity.setName(dto.getName());
@@ -16,10 +17,10 @@ public class SubCategoryBeanMapper {
 
     }
 
-    public static SubCategoryDto mapEntityToDto(SubCategory entity) {
+    public static SubCategoryResponseDto mapEntityToDto(SubCategory entity) {
         if (entity == null) return null;
 
-        SubCategoryDto dto = new SubCategoryDto();
+        SubCategoryResponseDto dto = new SubCategoryResponseDto();
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
         dto.setSlug(entity.getSlug());
