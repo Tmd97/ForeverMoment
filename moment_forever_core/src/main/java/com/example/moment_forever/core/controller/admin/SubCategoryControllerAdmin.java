@@ -20,9 +20,9 @@ public class SubCategoryControllerAdmin {
     @Autowired
     private SubCategoryService subCategoryService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<?>> createSubCategory(@RequestBody SubCategoryRequestDto subCategoryRequestDto) {
-        SubCategoryResponseDto subCategoryResponse = subCategoryService.createSubCategory(subCategoryRequestDto);
+    @PostMapping("/category/{id}")
+    public ResponseEntity<ApiResponse<?>> createSubCategory(@PathVariable Long id,@RequestBody SubCategoryRequestDto subCategoryRequestDto) {
+        SubCategoryResponseDto subCategoryResponse = subCategoryService.createSubCategory(id,subCategoryRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseUtil.buildCreatedResponse(subCategoryResponse, AppConstants.MSG_CREATED));
     }
@@ -58,6 +58,16 @@ public class SubCategoryControllerAdmin {
                 ResponseUtil.buildOkResponse(subCategoryResponseList, AppConstants.MSG_FETCHED)
         );
     }
+
+    @PutMapping("/{id}/associate/{categoryId}")
+    public ResponseEntity<ApiResponse<?>> associateSubCategoryToCategory(@PathVariable Long id,
+                                                                         @PathVariable Long categoryId) {
+        subCategoryService.associateSubCategoryToCategory(id, categoryId);
+        return ResponseEntity.ok(
+                ResponseUtil.buildOkResponse(null, "Sub-category associated with category successfully")
+        );
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<?>> updateSubCategory(

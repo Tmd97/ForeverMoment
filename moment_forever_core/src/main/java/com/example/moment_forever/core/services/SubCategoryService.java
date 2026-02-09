@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SubCategoryService {
 
-    SubCategoryResponseDto createSubCategory(SubCategoryRequestDto subCategoryDto);
+    SubCategoryResponseDto createSubCategory(Long id,SubCategoryRequestDto subCategoryDto);
 
     SubCategoryResponseDto updateSubCategory(Long id, SubCategoryRequestDto subCategoryDto);
 
@@ -20,4 +20,6 @@ public interface SubCategoryService {
     List<SubCategoryResponseDto> getByCategoryId(Long categoryId);
 
     boolean deleteSubCategory(Long id);
+
+   void associateSubCategoryToCategory(Long id, Long categoryId);
 }

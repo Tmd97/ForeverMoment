@@ -1,20 +1,28 @@
 package com.example.moment_forever.common.dto.request;
 
-public class SubCategoryRequestDto{
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
+@JsonIgnoreProperties(ignoreUnknown = false)
+public class SubCategoryRequestDto {
+
+    @NotBlank(message = "Sub-category name is required")
     private String name;
     private String description;
+
+    @NotBlank(message = "Slug is required")
     private String slug;
     private String icon;
     private String thumbnailUrl;
+
+    @Min(0)
     private Integer displayOrder;
-    private Boolean isActive;
-    private Long categoryId;
-    private String categoryName;
-    private String categorySlug;
+    private Boolean isActive=true;
 
     // Constructors
-    public SubCategoryRequestDto() {}
+    public SubCategoryRequestDto() {
+    }
 
 
     public void setActive(Boolean active) {
@@ -69,35 +77,11 @@ public class SubCategoryRequestDto{
         this.isActive = isActive;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setName(String name) {
+        this.name = name;
     }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public String getCategorySlug() {
-        return categorySlug;
-    }
-
-    public void setCategorySlug(String categorySlug) {
-        this.categorySlug = categorySlug;
-    }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
 }

@@ -25,34 +25,25 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     @Transactional
-    public SubCategoryResponseDto createSubCategory(SubCategoryRequestDto requestDto) {
+    public SubCategoryResponseDto createSubCategory(Long categoryId, SubCategoryRequestDto requestDto) {
         // Check if SubCategory with same name already exists
         if (subCategoryDao.existsByName(requestDto.getName())) {
             throw new IllegalArgumentException("SubCategory with name '" + requestDto.getName() + "' already exists");
         }
 
-        // Check if SubCategory with same slug already exists
         if (subCategoryDao.existsBySlug(requestDto.getSlug())) {
             throw new IllegalArgumentException("SubCategory with slug '" + requestDto.getSlug() + "' already exists");
         }
 
-        // Get the Category
-        if(requestDto.getCategoryId() == null) {
-            throw new IllegalArgumentException("Category id must be provided for SubCategory creation");
-        }
-        Category category = categoryDao.findById(requestDto.getCategoryId());
+        Category category = categoryDao.findById(categoryId);
         if (category == null) {
-            throw new IllegalArgumentException("Category with id " + requestDto.getCategoryId() + " not found");
+            throw new ResourceNotFoundException("No Category exist with id " + categoryId);
         }
 
-        // Create SubCategory
+        //Link SubCategory to Category and save
         SubCategory subCategory = new SubCategory();
         SubCategoryBeanMapper.mapDtoToEntity(requestDto, subCategory);
-
-        // Set the Category relationship
         subCategory.setCategory(category);
-
-        // Save
         SubCategory saved = subCategoryDao.save(subCategory);
 
         return SubCategoryBeanMapper.mapEntityToDto(saved);
@@ -78,20 +69,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
             throw new IllegalArgumentException("SubCategory with slug '" + requestDto.getSlug() + "' already exists");
         }
 
-        // Map updatable fields
         SubCategoryBeanMapper.mapDtoToEntity(requestDto, existing);
-        // If category is being changed, update relationship
-        if (requestDto.getCategoryId() != null &&
-                !existing.getCategory().getId().equals(requestDto.getCategoryId())) {
-            Category newCategory = categoryDao.findById(requestDto.getCategoryId());
-            if (newCategory == null) {
-                throw new IllegalArgumentException("Category with id " + requestDto.getCategoryId() + " not found");
-            }
-            existing.setCategory(newCategory);
-        }
-
         SubCategory updated = subCategoryDao.update(existing);
-
         return SubCategoryBeanMapper.mapEntityToDto(updated);
     }
 
@@ -148,5 +127,23 @@ public class SubCategoryServiceImpl implements SubCategoryService {
         }
         subCategoryDao.delete(existing);
         return true;
+    }
+
+    @Override
+    @Transactional
+    public void associateSubCategoryToCategory(Long id, Long categoryId) {
+        SubCategory subCategory = subCategoryDao.findById(id);
+        if (subCategory == null) {
+            throw new ResourceNotFoundException("No SubCategory exists with id " + id);
+        }
+
+        Category category = categoryDao.findById(categoryId);
+        if (category == null) {
+            throw new ResourceNotFoundException("No Category exists with id " + categoryId);
+        }
+
+        subCategory.setCategory(category);
+        subCategoryDao.update(subCategory);
+
     }
 }

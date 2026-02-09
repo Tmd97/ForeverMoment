@@ -30,12 +30,12 @@ public class SubCategoryBeanMapper {
 
         // Set category info if category exists
 
-        if (entity.getCategory() == null) {
-            return dto;
-        }
-        dto.setCategoryId(entity.getCategory().getId());
-        dto.setCategoryName(entity.getCategory().getName());
-        dto.setCategorySlug(entity.getCategory().getSlug());
+//        if (entity.getCategory() == null) {
+//            return dto;
+//        }
+//        dto.setCategoryId(entity.getCategory().getId());
+//        dto.setCategoryName(entity.getCategory().getName());
+//        dto.setCategorySlug(entity.getCategory().getSlug());
 
         return dto;
     }

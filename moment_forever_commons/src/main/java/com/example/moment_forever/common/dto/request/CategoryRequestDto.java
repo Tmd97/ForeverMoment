@@ -1,19 +1,35 @@
 package com.example.moment_forever.common.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = false)
 public class CategoryRequestDto {
 
+    @NotBlank(message = "Category name is required")
+    @Size(max = 100)
     private String name;
+
+    @Size(max = 500)
     private String description;
     private String slug;
     private String icon;
-    private Integer displayOrder;
-    private Boolean isActive;
-    private List<SubCategoryRequestDto> subCategories = new ArrayList<>();
 
-    public CategoryRequestDto() {}
+    @Min(0)
+    private Integer displayOrder;
+
+    private Boolean isActive = true;
+
+//    private List<SubCategoryRequestDto> subCategories = new ArrayList<>();
+
+    public CategoryRequestDto() {
+    }
 
     public CategoryRequestDto(Long id, String name, String slug) {
         this.name = name;
@@ -68,11 +84,11 @@ public class CategoryRequestDto {
         this.isActive = isActive;
     }
 
-    public List<SubCategoryRequestDto> getSubCategories() {
-        return subCategories;
-    }
-
-    public void setSubCategories(List<SubCategoryRequestDto> subCategories) {
-        this.subCategories = subCategories;
-    }
+//    public List<SubCategoryRequestDto> getSubCategories() {
+//        return subCategories;
+//    }
+//
+//    public void setSubCategories(List<SubCategoryRequestDto> subCategories) {
+//        this.subCategories = subCategories;
+//    }
 }

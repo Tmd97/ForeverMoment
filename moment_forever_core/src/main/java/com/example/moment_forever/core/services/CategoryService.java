@@ -30,13 +30,13 @@ public class CategoryService {
         CategoryBeanMapper.mapDtoToEntity(categoryRequestDto, category);
 
         // to handle SubCategories
-        if (categoryRequestDto.getSubCategories() != null && !categoryRequestDto.getSubCategories().isEmpty()) {
-            for (SubCategoryRequestDto subCatDto : categoryRequestDto.getSubCategories()) {
-                SubCategory subCategory = new SubCategory();
-                SubCategoryBeanMapper.mapDtoToEntity(subCatDto, subCategory);
-                category.setSubCategory(subCategory);
-            }
-        }
+//        if (categoryRequestDto.getSubCategories() != null && !categoryRequestDto.getSubCategories().isEmpty()) {
+//            for (SubCategoryRequestDto subCatDto : categoryRequestDto.getSubCategories()) {
+//                SubCategory subCategory = new SubCategory();
+//                SubCategoryBeanMapper.mapDtoToEntity(subCatDto, subCategory);
+//                category.setSubCategory(subCategory);
+//            }
+//        }
         categoryDao.save(category);
         return CategoryBeanMapper.mapEntityToDto(category);
     }

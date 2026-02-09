@@ -27,7 +27,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-                          // Only admin can register new users (for now)
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<?>> register(
             @Valid @RequestBody RegisterRequestDto request) {
