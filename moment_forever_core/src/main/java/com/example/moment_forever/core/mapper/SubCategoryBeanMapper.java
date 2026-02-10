@@ -23,6 +23,8 @@ public class SubCategoryBeanMapper {
         SubCategoryResponseDto dto = new SubCategoryResponseDto();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
+        //TODO optimize to avoid N+1 query problem when fetching category info for each subcategory
+//        dto.setCategoryId(entity.getCategory().getId());
         dto.setDescription(entity.getDescription());
         dto.setSlug(entity.getSlug());
         dto.setDisplayOrder(entity.getDisplayOrder());

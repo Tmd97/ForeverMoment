@@ -1,43 +1,42 @@
 package com.example.moment_forever.core.services;
 
+import com.example.moment_forever.common.dto.request.ReorderRequestDto;
 import com.example.moment_forever.common.errorhandler.ResourceNotFoundException;
 import com.example.moment_forever.common.dto.request.CategoryRequestDto;
-import com.example.moment_forever.common.dto.request.SubCategoryRequestDto;
 import com.example.moment_forever.common.dto.response.CategoryResponseDto;
+import com.example.moment_forever.common.response.ApiResponse;
 import com.example.moment_forever.core.mapper.CategoryBeanMapper;
-import com.example.moment_forever.core.mapper.SubCategoryBeanMapper;
 import com.example.moment_forever.data.dao.CategoryDao;
 import com.example.moment_forever.data.entities.Category;
-import com.example.moment_forever.data.entities.SubCategory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
-public class CategoryService {
+public class CategoryService extends ReorderingService {
 
     @Autowired
     private CategoryDao categoryDao;
 
+    @Autowired
+    private ReorderingService reorderingService;
+
+    //TODO remove from request the display Order, as backend have done set and return
     public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
         if (categoryDao.existsByName(categoryRequestDto.getName())) {
             throw new IllegalArgumentException("Category with name '" + categoryRequestDto.getName() + "' already exists");
         }
         Category category = new Category();
         CategoryBeanMapper.mapDtoToEntity(categoryRequestDto, category);
-
-        // to handle SubCategories
-//        if (categoryRequestDto.getSubCategories() != null && !categoryRequestDto.getSubCategories().isEmpty()) {
-//            for (SubCategoryRequestDto subCatDto : categoryRequestDto.getSubCategories()) {
-//                SubCategory subCategory = new SubCategory();
-//                SubCategoryBeanMapper.mapDtoToEntity(subCatDto, subCategory);
-//                category.setSubCategory(subCategory);
-//            }
-//        }
+        Long max=reorderingService.getMaxOrder(Category.class);
+        category.setDisplayOrder(max+1);
         Category res = categoryDao.save(category);
         return CategoryBeanMapper.mapEntityToDto(res);
     }
@@ -85,5 +84,10 @@ public class CategoryService {
         }
         categoryDao.delete(existing);
         return true;
+    }
+
+    public void reorderCategories(Long id, Long newPosition) {
+        reorderingService.reorderItems(id, newPosition, Category.class);
+
     }
 }

@@ -1,11 +1,15 @@
 package com.example.moment_forever.common.dto.request;
 
+import com.example.moment_forever.common.dto.response.NamedEntityDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class SubCategoryRequestDto {
+
+    @NotBlank(message = "category ID is required for Creation of SubCategory")
+    private Long categoryId;
 
     @NotBlank(message = "Sub-category name is required")
     private String name;
@@ -24,6 +28,17 @@ public class SubCategoryRequestDto {
     public SubCategoryRequestDto() {
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
 
     public void setActive(Boolean active) {
         isActive = active;

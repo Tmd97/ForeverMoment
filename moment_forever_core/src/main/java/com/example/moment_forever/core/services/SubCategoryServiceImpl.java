@@ -26,7 +26,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     @Transactional
-    public SubCategoryResponseDto createSubCategory(Long categoryId, SubCategoryRequestDto requestDto) {
+    public SubCategoryResponseDto createSubCategory(SubCategoryRequestDto requestDto) {
         // Check if SubCategory with same name already exists
         if (subCategoryDao.existsByName(requestDto.getName())) {
             throw new IllegalArgumentException("SubCategory with name '" + requestDto.getName() + "' already exists");
@@ -36,9 +36,9 @@ public class SubCategoryServiceImpl implements SubCategoryService {
             throw new IllegalArgumentException("SubCategory with slug '" + requestDto.getSlug() + "' already exists");
         }
 
-        Category category = categoryDao.findById(categoryId);
+        Category category = categoryDao.findById(requestDto.getCategoryId());
         if (category == null) {
-            throw new ResourceNotFoundException("No Category exist with id " + categoryId);
+            throw new ResourceNotFoundException("No Category exist with id " + requestDto.getCategoryId());
         }
 
         //Link SubCategory to Category and save
@@ -47,7 +47,9 @@ public class SubCategoryServiceImpl implements SubCategoryService {
         subCategory.setCategory(category);
         SubCategory saved = subCategoryDao.save(subCategory);
 
-        return SubCategoryBeanMapper.mapEntityToDto(saved);
+        SubCategoryResponseDto responseDto= SubCategoryBeanMapper.mapEntityToDto(saved);
+        responseDto.setCategoryId(requestDto.getCategoryId());
+        return responseDto;
     }
 
     @Override

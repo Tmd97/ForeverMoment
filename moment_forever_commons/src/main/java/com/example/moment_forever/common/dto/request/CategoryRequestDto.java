@@ -22,7 +22,7 @@ public class CategoryRequestDto {
     private String icon;
 
     @Min(0)
-    private Integer displayOrder;
+    private Long displayOrder;
 
     private Boolean isActive = true;
 
@@ -68,11 +68,11 @@ public class CategoryRequestDto {
         this.icon = icon;
     }
 
-    public Integer getDisplayOrder() {
+    public Long getDisplayOrder() {
         return displayOrder;
     }
 
-    public void setDisplayOrder(Integer displayOrder) {
+    public void setDisplayOrder(Long displayOrder) {
         this.displayOrder = displayOrder;
     }
 

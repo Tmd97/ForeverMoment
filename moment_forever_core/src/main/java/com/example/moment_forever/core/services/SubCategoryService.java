@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SubCategoryService {
 
-    SubCategoryResponseDto createSubCategory(Long id,SubCategoryRequestDto subCategoryDto);
+    SubCategoryResponseDto createSubCategory(SubCategoryRequestDto subCategoryDto);
 
     SubCategoryResponseDto updateSubCategory(Long id, SubCategoryRequestDto subCategoryDto);
 

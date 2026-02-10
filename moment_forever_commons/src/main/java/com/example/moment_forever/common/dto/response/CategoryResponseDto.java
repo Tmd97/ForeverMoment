@@ -8,7 +8,7 @@ public class CategoryResponseDto extends NamedEntityDto {
     private String description;
     private String slug;
     private String icon;
-    private Integer displayOrder;
+    private Long displayOrder;
     private Boolean isActive;
     private List<SubCategoryResponseDto> subCategories = new ArrayList<>();
 
@@ -38,11 +38,11 @@ public class CategoryResponseDto extends NamedEntityDto {
         this.icon = icon;
     }
 
-    public Integer getDisplayOrder() {
+    public Long getDisplayOrder() {
         return displayOrder;
     }
 
-    public void setDisplayOrder(Integer displayOrder) {
+    public void setDisplayOrder(Long displayOrder) {
         this.displayOrder = displayOrder;
     }
 

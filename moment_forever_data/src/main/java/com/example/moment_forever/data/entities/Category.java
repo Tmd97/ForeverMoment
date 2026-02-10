@@ -13,7 +13,7 @@ public class Category extends NamedEntity {
     private String description;
 
     @Column(name = "display_order")
-    private Integer displayOrder;
+    private Long displayOrder;
 
     @Column(name = "slug")
     private String slug;
@@ -29,11 +29,11 @@ public class Category extends NamedEntity {
         this.description = description;
     }
 
-    public Integer getDisplayOrder() {
+    public Long getDisplayOrder() {
         return displayOrder;
     }
 
-    public void setDisplayOrder(Integer displayOrder) {
+    public void setDisplayOrder(Long displayOrder) {
         this.displayOrder = displayOrder;
     }
 

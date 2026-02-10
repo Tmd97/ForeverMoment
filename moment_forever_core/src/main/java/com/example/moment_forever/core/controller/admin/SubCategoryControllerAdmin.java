@@ -20,9 +20,9 @@ public class SubCategoryControllerAdmin {
     @Autowired
     private SubCategoryService subCategoryService;
 
-    @PostMapping("/category/{id}")
-    public ResponseEntity<ApiResponse<?>> createSubCategory(@PathVariable Long id,@RequestBody SubCategoryRequestDto subCategoryRequestDto) {
-        SubCategoryResponseDto subCategoryResponse = subCategoryService.createSubCategory(id,subCategoryRequestDto);
+    @PostMapping("/category")
+    public ResponseEntity<ApiResponse<?>> createSubCategory(@RequestBody SubCategoryRequestDto subCategoryRequestDto) {
+        SubCategoryResponseDto subCategoryResponse = subCategoryService.createSubCategory(subCategoryRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseUtil.buildCreatedResponse(subCategoryResponse, AppConstants.MSG_CREATED));
     }

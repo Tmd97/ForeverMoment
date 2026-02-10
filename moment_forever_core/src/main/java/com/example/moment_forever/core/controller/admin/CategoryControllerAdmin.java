@@ -1,11 +1,14 @@
 package com.example.moment_forever.core.controller.admin;
 
+import com.example.moment_forever.common.dto.request.ReorderRequestDto;
 import com.example.moment_forever.common.response.ApiResponse;
 import com.example.moment_forever.common.response.ResponseUtil;
 import com.example.moment_forever.common.utils.AppConstants;
 import com.example.moment_forever.common.dto.request.CategoryRequestDto;
 import com.example.moment_forever.common.dto.response.CategoryResponseDto;
 import com.example.moment_forever.core.services.CategoryService;
+import com.example.moment_forever.core.services.ReorderingService;
+import com.example.moment_forever.data.entities.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,9 @@ public class CategoryControllerAdmin {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ReorderingService reorderingService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<?>> createCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
@@ -62,5 +68,15 @@ public class CategoryControllerAdmin {
                 ResponseUtil.buildOkResponse(null, AppConstants.MSG_DELETED)
         );
     }
+
+    @PatchMapping("/reorder")
+    public ResponseEntity<ApiResponse<?>> reOrderTheItems(
+            @RequestBody ReorderRequestDto reorderRequestDto) {
+        reorderingService.reorderItems(reorderRequestDto.getId(), reorderRequestDto.getNewPosition(), Category.class);
+        return ResponseEntity.ok(
+                ResponseUtil.buildOkResponse(null, AppConstants.MSG_UPDATED)
+        );
+    }
+
 
 }
