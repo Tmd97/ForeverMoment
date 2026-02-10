@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -68,11 +69,12 @@ public class CategoryService {
     public List<CategoryResponseDto> getAll() {
         List<Category> categories = categoryDao.findAll();
         if (categories == null || categories.size() == 0) {
-            throw new ResourceNotFoundException("Categories doesn't exist");
+            return new ArrayList<>();
+        } else {
+            return categories.stream()
+                    .map(CategoryBeanMapper::mapEntityToDto)
+                    .toList();
         }
-        return categories.stream()
-                .map(CategoryBeanMapper::mapEntityToDto)
-                .toList();
     }
 
     @Transactional

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -99,11 +100,12 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     public List<SubCategoryResponseDto> getAll() {
         List<SubCategory> subCategories = subCategoryDao.findAll();
         if (subCategories == null || subCategories.isEmpty()) {
-            throw new ResourceNotFoundException("No SubCategories exist");
+            return new ArrayList<>();
+        } else {
+            return subCategories.stream()
+                    .map(SubCategoryBeanMapper::mapEntityToDto)
+                    .toList();
         }
-        return subCategories.stream()
-                .map(SubCategoryBeanMapper::mapEntityToDto)
-                .toList();
     }
 
     @Override
