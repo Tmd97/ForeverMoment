@@ -21,7 +21,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role, Long> implements RoleDao {
 
     @Override
     public Optional<Role> findByNameIgnoreCase(String name) {
-        if(name==null || name.isEmpty()){
+        if (name == null || name.isEmpty()) {
             return Optional.empty();
         }
         TypedQuery<Role> query = em.createQuery(
@@ -63,5 +63,29 @@ public class RoleDaoImpl extends GenericDaoImpl<Role, Long> implements RoleDao {
                 "SELECT r FROM Role r WHERE r.systemRole = true",
                 Role.class
         ).getResultList();
+    }
+
+    @Override
+    public List<Role> getAllActiveRoles() {
+        return em.createQuery(
+                "SELECT DISTINCT r FROM Role r " +
+                        "LEFT JOIN FETCH r.userRoles ur " +
+                        "LEFT JOIN FETCH ur.authUser",
+                Role.class
+        ).getResultList();
+    }
+
+    @Override
+    public List<Role> findByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        TypedQuery<Role> query = em.createQuery(
+                "SELECT r FROM Role r WHERE r.id IN :ids",
+                Role.class
+        );
+        query.setParameter("ids", ids);
+        List<Role> roleList = query.getResultList();
+        return roleList;
     }
 }

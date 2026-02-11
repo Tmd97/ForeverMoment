@@ -1,5 +1,7 @@
 package com.example.moment_forever.security.dto;
 
+import java.util.List;
+
 public class AuthResponse {
 
     private String token;
@@ -11,6 +13,10 @@ public class AuthResponse {
     private String fullName;
     private String roles;
     private String message;
+    private List<Long> roleIds;
+    private List<String> roleNames;
+    private String assignedBy; // Who granted this role
+    private String assignedFrom; // by how (means during registration, by admin, etc.)
 
     public AuthResponse() {}
 
@@ -51,5 +57,38 @@ public class AuthResponse {
     }
     public String getMessage() {
         return message;
+    }
+
+
+    public List<Long> getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(List<Long> roleIds) {
+        this.roleIds = roleIds;
+    }
+
+    public List<String> getRoleNames() {
+        return roleNames;
+    }
+
+    public void setRoleNames(List<String> roleNames) {
+        this.roleNames = roleNames;
+    }
+
+    public String getAssignedBy() {
+        return assignedBy;
+    }
+
+    public void setAssignedBy(String assignedBy) {
+        this.assignedBy = assignedBy;
+    }
+
+    public String getAssignedFrom() {
+        return assignedFrom;
+    }
+
+    public void setAssignedFrom(String assignedFrom) {
+        this.assignedFrom = assignedFrom;
     }
 }

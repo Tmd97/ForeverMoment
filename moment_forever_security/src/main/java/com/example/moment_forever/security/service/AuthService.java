@@ -13,13 +13,17 @@ import com.example.moment_forever.data.entities.auth.Role;
 import com.example.moment_forever.security.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -55,12 +59,12 @@ public class AuthService {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         authUser.setPassword(encodedPassword);
 
-        Optional<Role> roleOptional = roleDao.findByNameIgnoreCase(request.getRole());
-        if (roleOptional.isEmpty()) {
-            logger.warn("Role not found during registration: {}. Defaulting to ROLE_USER", request.getRole());
-            throw new CustomAuthException("Specified role not found. Allowed values: USER, ADMIN");
+        Role role = roleDao.findById(request.getRoleId());
+        if (role == null) {
+            logger.warn("Role not found during registration: {}. Defaulting to ROLE_USER", request.getRoleId());
+            throw new CustomAuthException("Specified role not found. Allowed values: USER, ADMIN, SUPER_ADMIN");
         }
-        Role role = roleOptional.get();
+
         AuthUserRole authUserRole = new AuthUserRole();
         authUserRole.setAuthUser(authUser);
         authUserRole.setRole(role);
@@ -70,6 +74,8 @@ public class AuthService {
         ApplicationUser appUser = AppUserBeanMapper.mapDtoToEntity(request);
         appUser.setAuthUser(authUser);
         ApplicationUser savedAppUser = applicationUserDao.save(appUser);
+
+//  TODO: optimize this way (to be done later) authUser.addRole(role);  (that too can be done)
 
         try {
             authUserRoleDao.save(authUserRole);
@@ -85,7 +91,21 @@ public class AuthService {
         //TODO using the JWT auth response for registration response , not good coding design, need to refactor later
         AuthResponse registrationResponse = new AuthResponse();
         registrationResponse.setEmail(authUser.getUsername());
-        registrationResponse.setMessage("Registration successful for " + authUser.getUsername() + " Please verify your email before logging in.");
+        registrationResponse.setMessage("Registration successful for " + authUser.getUsername() + " Please verify");
+        List<Long> roleIdList = authUser.getUserRoles().stream().map(authUserRole -> authUserRole.getRole().getId()).collect(Collectors.toList());
+        registrationResponse.setRoleIds(roleIdList);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object o = authentication.getPrincipal();
+            if (o instanceof AuthUser) {
+                JwtUserDetails currentUser = (JwtUserDetails) o;
+                registrationResponse.setAssignedBy(currentUser.getUsername());
+            }
+        } else {
+            registrationResponse.setAssignedBy("SYSTEM"); // called SuperAdmin
+        }
+        registrationResponse.setUserId(authUser.getId());
+        registrationResponse.setEmail(authUser.getUsername());
         return registrationResponse;
     }
 
@@ -151,7 +171,7 @@ public class AuthService {
     }
 
     /*
-        * Generate a new refresh token using the provided refresh token
+     * Generate a new refresh token using the provided refresh token
      */
     @Transactional
     public AuthResponse generateRefreshToken(String oldRefreshToken) {

@@ -21,8 +21,8 @@ public class RegisterRequestDto {
     private String phoneNumber;
     private String preferredCity;
 
-    @NotBlank(message = "Role is required. Allowed values: USER, ADMIN")
-    private String role; // Optional: role can be set by admin or default to "USER"
+    @NotBlank
+    private Long roleId;
 
     // Constructors
     public RegisterRequestDto() {
@@ -74,12 +74,11 @@ public class RegisterRequestDto {
         this.preferredCity = preferredCity;
     }
 
-
-    public String getRole() {
-        return role;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

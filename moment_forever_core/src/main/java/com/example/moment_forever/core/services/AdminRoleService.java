@@ -1,0 +1,139 @@
+package com.example.moment_forever.core.services;
+
+import com.example.moment_forever.common.dto.request.RoleRequestDto;
+import com.example.moment_forever.common.dto.response.RoleResponseDto;
+
+import com.example.moment_forever.common.errorhandler.ResourceNotFoundException;
+import com.example.moment_forever.core.mapper.RoleBeanMapper;
+import com.example.moment_forever.data.dao.auth.RoleDao;
+import com.example.moment_forever.data.entities.auth.Role;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class AdminRoleService {
+
+    @Autowired
+    private RoleDao roleDao;
+
+    // System roles that cannot be deleted
+    private static final List<String> SYSTEM_ROLES = List.of("ADMIN", "SUPER_ADMIN", "USER");
+
+    @Transactional
+    public RoleResponseDto createRole(RoleRequestDto requestDto) {
+
+        if (roleDao.existsByNameIgnoreCase(requestDto.getName())) {
+            throw new IllegalArgumentException(
+                    "Role with name '" + requestDto.getName() + "' already exists"
+            );
+        }
+        Role role = RoleBeanMapper.mapDtoToEntity(requestDto);
+        Role savedRole = roleDao.save(role);
+
+        return RoleBeanMapper.mapEntityToDto(savedRole);
+    }
+
+    @Transactional(readOnly = true)
+    public RoleResponseDto getRoleById(Long id) {
+        Role role = getRoleByIdValidation(id);
+        return RoleBeanMapper.mapEntityToDto(role);
+    }
+
+
+    @Transactional(readOnly = true)
+    public RoleResponseDto getRoleByName(String name) {
+        Optional<Role> role = roleDao.findByNameIgnoreCase(name);
+        if (role.isEmpty()) {
+            throw new ResourceNotFoundException("Role not found with name: " + name);
+        }
+        return RoleBeanMapper.mapEntityToDto(role.get());
+    }
+
+    @Transactional(readOnly = true)
+    public List<RoleResponseDto> getAllRoles() {
+        List<Role> roles = roleDao.findAll();
+        return RoleBeanMapper.toDtoList(roles);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RoleResponseDto> getAllActiveRoles() {
+        List<Role> roles = roleDao.getAllActiveRoles();
+        return RoleBeanMapper.toDtoList(roles);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RoleResponseDto> getSystemRoles() {
+        List<Role> roles = roleDao.findBySystemRoleTrue();
+        return RoleBeanMapper.toDtoList(roles);
+    }
+
+    @Transactional
+    public RoleResponseDto updateRole(Long id, RoleRequestDto requestDto) {
+        Role role = getRoleByIdValidation(id);
+        // Check if name is being changed and already exists
+        if (!role.getName().equalsIgnoreCase(requestDto.getName()) &&
+                roleDao.existsByNameIgnoreCase(requestDto.getName())) {
+            throw new IllegalArgumentException(
+                    "Role with name '" + requestDto.getName() + "' already exists"
+            );
+        }
+
+        RoleBeanMapper.updateEntity(role, requestDto);
+        Role updatedRole = roleDao.save(role);
+
+        return RoleBeanMapper.mapEntityToDto(updatedRole);
+    }
+
+    @Transactional
+    public void deleteRole(Long id) {
+        Role role = getRoleByIdValidation(id);
+        // Prevent deletion of system roles
+        if (role.isSystemRole() || SYSTEM_ROLES.contains(role.getName())) {
+            throw new IllegalStateException(
+                    "Cannot delete system role: " + role.getName()
+            );
+        }
+
+        // Soft delete - just deactivate instead of actual delete
+        role.setActive(false);
+        roleDao.save(role);
+
+        // Or hard delete if you prefer:
+        // roleDao.delete(role);
+    }
+
+    @Transactional
+    public RoleResponseDto activateRole(Long id) {
+        Role role = getRoleByIdValidation(id);
+        role.setActive(true);
+        Role updatedRole = roleDao.save(role);
+        return RoleBeanMapper.mapEntityToDto(updatedRole);
+    }
+
+    @Transactional
+    public RoleResponseDto deactivateRole(Long id) {
+        Role role = getRoleByIdValidation(id);
+        // Don't allow deactivating system roles
+        if (role.isSystemRole() || SYSTEM_ROLES.contains(role.getName())) {
+            throw new IllegalStateException(
+                    "Cannot deactivate system role: " + role.getName()
+            );
+        }
+
+        role.setActive(false);
+        Role updatedRole = roleDao.save(role);
+        return RoleBeanMapper.mapEntityToDto(updatedRole);
+    }
+
+    private Role getRoleByIdValidation(Long id) {
+        Role role = roleDao.findById(id);
+        if (role == null) {
+            throw new ResourceNotFoundException("Role not found with id: " + id);
+        }
+        return role;
+    }
+}

@@ -15,5 +15,10 @@ public interface RoleDao extends GenericDao<Role, Long> {
     List<Role> findByActiveTrue();
 
     List<Role> findBySystemRoleTrue();
+    List<Role> getAllActiveRoles();
+
+    List<Role> findByIds(List<Long> ids);
+
+
 
 }
