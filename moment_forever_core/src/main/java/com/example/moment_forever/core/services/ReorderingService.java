@@ -1,5 +1,6 @@
 package com.example.moment_forever.core.services;
 
+import com.example.moment_forever.common.errorhandler.ResourceNotFoundException;
 import com.example.moment_forever.data.dao.ReOrderingDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class ReorderingService {
         Long currentPosition = reOrderingDao.getCurrentPosition(entityId, entityType);
 
         if (currentPosition == null) {
-            throw new RuntimeException("Entity not found with id: " + entityId);
+            throw new ResourceNotFoundException("Entity or position is missing with id: " + entityId);
         }
 
         if (currentPosition.equals(newPosition)) {
