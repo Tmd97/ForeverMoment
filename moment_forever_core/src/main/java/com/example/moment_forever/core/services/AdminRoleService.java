@@ -9,6 +9,7 @@ import com.example.moment_forever.common.errorhandler.ResourceNotFoundException;
 import com.example.moment_forever.core.mapper.ApplicationUserBeanMapper;
 import com.example.moment_forever.core.mapper.RoleBeanMapper;
 import com.example.moment_forever.data.dao.auth.AuthUserDao;
+import com.example.moment_forever.data.dao.auth.AuthUserRoleDao;
 import com.example.moment_forever.data.dao.auth.RoleDao;
 import com.example.moment_forever.data.entities.auth.AuthUser;
 import com.example.moment_forever.data.entities.auth.AuthUserRole;
@@ -30,6 +31,9 @@ public class AdminRoleService {
 
     @Autowired
     private AuthUserDao authUserDao;
+
+    @Autowired
+    private AuthUserRoleDao authUserRoleDao;
 
     // TODO: (need discussion) System roles that cannot be deleted
     private static final List<String> SYSTEM_ROLES = List.of("SYSTEM", "SUPER_ADMIN");
@@ -110,16 +114,17 @@ public class AdminRoleService {
         return RoleBeanMapper.mapEntityToDto(updatedRole);
     }
 
+    //TODO this method need to be optimized
     @Transactional
     public void deleteRole(Long id) {
         Role role = getRoleByIdValidation(id);
         validIfSuperAdmin(role);
-        // Soft delete - just deactivate instead of actual delete
-        role.setActive(false);
-        //roleDao.save(role);
+        // TODO Soft delete - just deactivate instead of actual delete
+        //TODO remove N+1 Query issue
 
-        // Or hard delete if you prefer:
-         roleDao.delete(role);
+        List<AuthUserRole> authUserRole = authUserRoleDao.findByRoleId(id); // remove mappings
+        authUserRole.forEach(authUserRoleDao::delete);
+        roleDao.delete(role);
     }
 
     @Transactional
