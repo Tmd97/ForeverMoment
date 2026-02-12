@@ -187,10 +187,21 @@ springdoc:
     path: /v3/api-docs
     #http://localhost:8080/api/swagger-ui/index.html
 
-
+########### FOR MONGO DB GRIDFS ##############
 object:
   store:
     provider: gridfs
     gridfs-bucket: my_images
     s3-region: us-east-1
     s3-bucket: my-s3-bucket
+
+
+# For S3
+#object:
+#  store:
+#    provider: s3
+#    s3-region: us-east-1
+#    s3-bucket: my-app-images
+#    s3-access-key: ${AWS_ACCESS_KEY}
+#    s3-secret-key: ${AWS_SECRET_KEY}
+    # s3-endpoint: http://localhost:4566  # For LocalStack

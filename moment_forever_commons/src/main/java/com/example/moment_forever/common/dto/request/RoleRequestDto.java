@@ -11,8 +11,8 @@ public class RoleRequestDto {
 
     @JsonProperty("roleName")
     @NotBlank(message = "Role name is required")
-    @Size(min = 2, max = 50, message = "Role name must be between 2 and 50 characters")
-    @Pattern(regexp = "^[A-Z_]+$", message = "Role name must be uppercase with underscores (e.g., ADMIN, SUPER_ADMIN)")
+//    @Size(min = 2, max = 50, message = "Role name must be between 2 and 50 characters")
+//    @Pattern(regexp = "^[A-Z_]+$", message = "Role name must be uppercase with underscores (e.g., ADMIN, SUPER_ADMIN)")
     private String roleName;
 
     @Size(max = 200, message = "Description cannot exceed 200 characters")

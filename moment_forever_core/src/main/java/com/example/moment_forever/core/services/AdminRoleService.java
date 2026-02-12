@@ -67,7 +67,7 @@ public class AdminRoleService {
 
     @Transactional(readOnly = true)
     public List<RoleResponseDto> getAllRoles() {
-        List<Role> roles = roleDao.findAll();
+        List<Role> roles = roleDao.findByActiveTrue();
         return RoleBeanMapper.toDtoList(roles);
     }
 
