@@ -199,11 +199,13 @@ springdoc:
 
 
 
-# For GridFS
+# For GridFS bucket is here just a prefix for collection (table)
+# it create two collection for files . one is [bucketname].files and [bucketname].chunks
+# fs is the default bucket name, can give any one if use - in name have to use [] for getting documents
 object:
   store:
     provider: gridfs
-    gridfs-bucket: my-images
+    gridfs-bucket: fs
 
 ---
 # For S3
