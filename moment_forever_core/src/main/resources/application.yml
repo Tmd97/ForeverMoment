@@ -186,3 +186,11 @@ springdoc:
   api-docs:
     path: /v3/api-docs
     #http://localhost:8080/api/swagger-ui/index.html
+
+
+object:
+  store:
+    provider: gridfs
+    gridfs-bucket: my_images
+    s3-region: us-east-1
+    s3-bucket: my-s3-bucket
