@@ -116,10 +116,10 @@ public class AdminRoleService {
         validIfSuperAdmin(role);
         // Soft delete - just deactivate instead of actual delete
         role.setActive(false);
-        roleDao.save(role);
+        //roleDao.save(role);
 
         // Or hard delete if you prefer:
-        // roleDao.delete(role);
+         roleDao.delete(role);
     }
 
     @Transactional
