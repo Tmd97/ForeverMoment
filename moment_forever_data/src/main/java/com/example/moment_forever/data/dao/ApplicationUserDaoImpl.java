@@ -36,7 +36,7 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
     @Override
     public Optional<ApplicationUser> findByAuthUserId(Long authUserId) {
         TypedQuery<ApplicationUser> query = em.createQuery(
-                "SELECT au FROM ApplicationUser au WHERE au.authUserId = :authUserId",
+                "SELECT au FROM ApplicationUser au WHERE au.authUser.id = :authUserId",
                 ApplicationUser.class
         );
         query.setParameter("authUserId", authUserId);

@@ -45,8 +45,8 @@ public class AuthController {
 //        if (!isSuperAdmin) {
 //            throw new NotAllowedCustomException("Only Super Admin can register new users");
 //        }
-        AuthResponse response = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseUtil.buildCreatedResponse(response, "User registered successfully"));
+        authService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseUtil.buildCreatedResponse(null, "User registered successfully"));
     }
 
     @PostMapping("/login")

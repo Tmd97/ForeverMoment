@@ -57,4 +57,5 @@ public class AppUserResponseDto extends NamedEntityDto {
     public void setPreferredCity(String preferredCity) {
         this.preferredCity = preferredCity;
     }
+
 }
