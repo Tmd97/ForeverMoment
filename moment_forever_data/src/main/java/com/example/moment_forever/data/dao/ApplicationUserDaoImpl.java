@@ -22,8 +22,7 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
     public Optional<ApplicationUser> findByEmailIgnoreCase(String email) {
         TypedQuery<ApplicationUser> query = em.createQuery(
                 "SELECT au FROM ApplicationUser au WHERE LOWER(au.email) = LOWER(:email)",
-                ApplicationUser.class
-        );
+                ApplicationUser.class);
         query.setParameter("email", email);
 
         try {
@@ -36,9 +35,8 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
     @Override
     public Optional<ApplicationUser> findByAuthUserId(Long authUserId) {
         TypedQuery<ApplicationUser> query = em.createQuery(
-                "SELECT au FROM ApplicationUser au WHERE au.authUserId = :authUserId",
-                ApplicationUser.class
-        );
+                "SELECT au FROM ApplicationUser au WHERE au.authUser.id = :authUserId",
+                ApplicationUser.class);
         query.setParameter("authUserId", authUserId);
 
         try {
@@ -52,8 +50,7 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
     public boolean existsByEmailIgnoreCase(String email) {
         TypedQuery<Long> query = em.createQuery(
                 "SELECT COUNT(au) FROM ApplicationUser au WHERE LOWER(au.email) = LOWER(:email)",
-                Long.class
-        );
+                Long.class);
         query.setParameter("email", email);
 
         return query.getSingleResult() > 0;
@@ -67,8 +64,7 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
 
         TypedQuery<Long> query = em.createQuery(
                 "SELECT COUNT(au) FROM ApplicationUser au WHERE au.phoneNumber = :phoneNumber",
-                Long.class
-        );
+                Long.class);
         query.setParameter("phoneNumber", phoneNumber.trim());
 
         return query.getSingleResult() > 0;
@@ -78,8 +74,7 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
     public List<ApplicationUser> findByPreferredCityIgnoreCase(String city) {
         TypedQuery<ApplicationUser> query = em.createQuery(
                 "SELECT au FROM ApplicationUser au WHERE LOWER(au.preferredCity) = LOWER(:city)",
-                ApplicationUser.class
-        );
+                ApplicationUser.class);
         query.setParameter("city", city);
 
         return query.getResultList();
@@ -89,8 +84,7 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
     public List<ApplicationUser> findByCreatedAtAfter(LocalDateTime date) {
         TypedQuery<ApplicationUser> query = em.createQuery(
                 "SELECT au FROM ApplicationUser au WHERE au.createdAt > :date",
-                ApplicationUser.class
-        );
+                ApplicationUser.class);
         query.setParameter("date", date);
 
         return query.getResultList();
@@ -108,8 +102,7 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
                 "SELECT au FROM ApplicationUser au WHERE " +
                         "LOWER(au.fullName) LIKE :pattern OR " +
                         "LOWER(au.email) LIKE :pattern",
-                ApplicationUser.class
-        );
+                ApplicationUser.class);
         query.setParameter("pattern", searchPattern);
 
         return query.getResultList();
@@ -120,5 +113,33 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
         em.createQuery("DELETE FROM ApplicationUser a WHERE a.authUser.id = :authUserId")
                 .setParameter("authUserId", authUserId)
                 .executeUpdate();
+    }
+
+    @Override
+    public List<ApplicationUser> findAllWithAuthAndRoles() {
+        TypedQuery<ApplicationUser> query = em.createQuery(
+                "SELECT DISTINCT au FROM ApplicationUser au " +
+                        "LEFT JOIN FETCH au.authUser auth " +
+                        "LEFT JOIN FETCH auth.userRoles ur " +
+                        "LEFT JOIN FETCH ur.role",
+                ApplicationUser.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public Optional<ApplicationUser> findByIdWithAuthAndRoles(Long id) {
+        TypedQuery<ApplicationUser> query = em.createQuery(
+                "SELECT DISTINCT au FROM ApplicationUser au " +
+                        "LEFT JOIN FETCH au.authUser auth " +
+                        "LEFT JOIN FETCH auth.userRoles ur " +
+                        "LEFT JOIN FETCH ur.role " +
+                        "WHERE au.id = :id",
+                ApplicationUser.class);
+        query.setParameter("id", id);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }

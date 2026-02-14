@@ -54,12 +54,22 @@ public class UserProfileService {
 
             // Update fields
             applicationUser.setFullName(userProfileRequestDto.getFullName());
-            applicationUser.setEmail(userProfileRequestDto.getEmail());
+
+            // Sync email change with AuthUser
+            if (!applicationUser.getEmail().equalsIgnoreCase(userProfileRequestDto.getEmail())) {
+                if (authUserDao.existsByUsername(userProfileRequestDto.getEmail())) {
+                    throw new CustomAuthException("Email already in use: " + userProfileRequestDto.getEmail());
+                }
+                AuthUser authUser = applicationUser.getAuthUser();
+                authUser.setUsername(userProfileRequestDto.getEmail());
+                authUserDao.save(authUser);
+                applicationUser.setEmail(userProfileRequestDto.getEmail());
+            }
+
             applicationUser.setPhoneNumber(userProfileRequestDto.getPhoneNumber());
             applicationUser.setProfilePictureUrl(userProfileRequestDto.getProfilePictureUrl());
             applicationUser.setDateOfBirth(userProfileRequestDto.getDateOfBirth());
             applicationUser.setPreferredCity(userProfileRequestDto.getPreferredCity());
-
 
             // Save updated user
             ApplicationUser updatedUser = applicationUserDao.update(applicationUser);
@@ -76,7 +86,7 @@ public class UserProfileService {
         }
 
         Object o = authentication.getPrincipal();
-        if (!(o instanceof UserDetails)) {  // Check type before casting
+        if (!(o instanceof UserDetails)) { // Check type before casting
             throw new CustomAuthException("Invalid principal type");
         }
 
@@ -85,7 +95,8 @@ public class UserProfileService {
         return ApplicationUserBeanMapper.mapEntityToDto(applicationUser);
     }
 
-    //delete the user profile of the currently authenticated user, this will delete the authUser and cascade delete the applicationUser as well
+    // delete the user profile of the currently authenticated user, this will delete
+    // the authUser and cascade delete the applicationUser as well
     public void deleteCurrentUserProfile(String password) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -93,7 +104,7 @@ public class UserProfileService {
         }
 
         Object o = authentication.getPrincipal();
-        if (!(o instanceof UserDetails)) {  // Check type before casting
+        if (!(o instanceof UserDetails)) { // Check type before casting
             throw new CustomAuthException("Invalid principal type");
         }
 

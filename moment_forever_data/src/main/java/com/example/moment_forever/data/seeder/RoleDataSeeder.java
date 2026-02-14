@@ -5,8 +5,6 @@ import com.example.moment_forever.data.entities.auth.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -21,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
  * - Runs before other seeders (user seeders, etc.)
  * - Roles must exist before we can assign them to users
  */
-@Component
-@Order(1) // Run first
+// @Component
+// @Order(1) // Run first
 public class RoleDataSeeder implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleDataSeeder.class);
@@ -39,11 +37,19 @@ public class RoleDataSeeder implements CommandLineRunner {
     public void run(String... args) {
         logger.info("Starting role data initialization...");
 
+        // 0. SUPER_ADMIN Role - Absolute access
+        createRoleIfNotFound(
+                "SUPER_ADMIN",
+                "Super Administrator - absolute access",
+                1000, // Highest permission level
+                true // System role
+        );
+
         // 1. USER Role - Basic customer role
         createRoleIfNotFound(
                 "USER",
                 "Regular customer - can book experiences and manage profile",
-                10,  // Lowest permission level
+                10, // Lowest permission level
                 true // System role (cannot be deleted)
         );
 
@@ -59,7 +65,7 @@ public class RoleDataSeeder implements CommandLineRunner {
         createRoleIfNotFound(
                 "CONTENT_MANAGER",
                 "Can create, edit, and manage experiences (services)",
-                50,  // Mid-level permission
+                50, // Mid-level permission
                 false // Can be deleted/modified
         );
 
@@ -67,12 +73,12 @@ public class RoleDataSeeder implements CommandLineRunner {
         createRoleIfNotFound(
                 "BOOKING_MANAGER",
                 "Can view, confirm, and cancel customer bookings",
-                40,  // Mid-level permission
+                40, // Mid-level permission
                 false // Can be deleted/modified
         );
 
         logger.info("Role data initialization completed.");
-//        logger.info("Total roles in system: {}", roleDao.count());
+        // logger.info("Total roles in system: {}", roleDao.count());
     }
 
     /**
@@ -84,7 +90,7 @@ public class RoleDataSeeder implements CommandLineRunner {
      * - Logging: Tracks what's being created
      */
     private void createRoleIfNotFound(String name, String description,
-                                      Integer permissionLevel, boolean systemRole) {
+            Integer permissionLevel, boolean systemRole) {
 
         // Check if role already exists (case-insensitive)
         boolean exists = roleDao.existsByNameIgnoreCase(name);
@@ -112,7 +118,7 @@ public class RoleDataSeeder implements CommandLineRunner {
      * Useful for updating role descriptions/permissions across deployments
      */
     private void updateExistingRoleIfChanged(String name, String newDescription,
-                                             Integer newPermissionLevel, boolean newSystemRole) {
+            Integer newPermissionLevel, boolean newSystemRole) {
 
         roleDao.findByNameIgnoreCase(name).ifPresent(existingRole -> {
             boolean needsUpdate = false;

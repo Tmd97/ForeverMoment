@@ -1,5 +1,6 @@
 package com.example.moment_forever.security.service;
 
+import com.example.moment_forever.common.dto.response.AppUserResponseDto;
 import com.example.moment_forever.common.errorhandler.CustomAuthException;
 import com.example.moment_forever.data.dao.ApplicationUserDao;
 import com.example.moment_forever.data.dao.auth.AuthUserDao;
@@ -39,7 +40,9 @@ public class AuthService {
     private final JwtService jwtService;
     private final RefreshTokenDao refreshTokenDao;
 
-    public AuthService(AuthenticationManager authenticationManager, AuthUserDao authUserDao, AuthUserRoleDao authUserRoleDao, ApplicationUserDao applicationUserDao, RoleDao roleDao, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenDao refreshTokenDao) {
+    public AuthService(AuthenticationManager authenticationManager, AuthUserDao authUserDao,
+                       AuthUserRoleDao authUserRoleDao, ApplicationUserDao applicationUserDao, RoleDao roleDao,
+                       PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenDao refreshTokenDao) {
         this.authenticationManager = authenticationManager;
         this.authUserDao = authUserDao;
         this.authUserRoleDao = authUserRoleDao;
@@ -55,51 +58,35 @@ public class AuthService {
 
         validateEmailNotExists(request.getEmail());
         AuthUser authUser = AuthBeanMapper.mapDtoToEntity(request);
-        //TODO: (encoding to be done) ENCODE THE PASSWORD HERE!
+        // TODO: (encoding to be done) ENCODE THE PASSWORD HERE!
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         authUser.setPassword(encodedPassword);
-
         Role role = roleDao.findById(request.getRoleId());
-        if (role == null) {
-            logger.warn("Role not found during registration: {}. Defaulting to ROLE_USER", request.getRoleId());
-            throw new CustomAuthException("Specified role not found. Allowed values: USER, ADMIN, SUPER_ADMIN");
-        }
-
-        AuthUserRole authUserRole = new AuthUserRole();
-        authUserRole.setAuthUser(authUser);
-        authUserRole.setRole(role);
+        authUser.addRole(role);
         AuthUser savedAuthUser = authUserDao.save(authUser);
-
-        // create User profile (minimal info) and link to AuthUser
         ApplicationUser appUser = AppUserBeanMapper.mapDtoToEntity(request);
         appUser.setAuthUser(authUser);
         ApplicationUser savedAppUser = applicationUserDao.save(appUser);
-
-//  TODO: optimize this way (to be done later)       authUser.addRole(role);  (that too can be done)
-
-        try {
-            authUserRoleDao.save(authUserRole);
-        } catch (Exception e) {
-            logger.error("Error assigning ROLE_USER to AuthUser id: {}", savedAuthUser.getId(), e);
-            throw new RuntimeException("Internal server error during registration");
-        }
         return buildRegistrationResponseWithoutToken(savedAuthUser, savedAppUser);
     }
 
-
     private AuthResponse buildRegistrationResponseWithoutToken(AuthUser authUser, ApplicationUser appUser) {
-        //TODO using the JWT auth response for registration response , not good coding design, need to refactor later
+        // TODO using the JWT auth response for registration response , not good coding
+        // design, need to refactor later
         AuthResponse registrationResponse = new AuthResponse();
         registrationResponse.setEmail(authUser.getUsername());
         registrationResponse.setMessage("Registration successful for " + authUser.getUsername() + " Please verify");
-        List<Long> roleIdList = authUser.getUserRoles().stream().map(authUserRole -> authUserRole.getRole().getId()).collect(Collectors.toList());
+        List<Long> roleIdList = authUser.getUserRoles().stream().map(authUserRole -> authUserRole.getRole().getId())
+                .collect(Collectors.toList());
         registrationResponse.setRoleIds(roleIdList);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             Object o = authentication.getPrincipal();
-            if (o instanceof AuthUser) {
+            if (o instanceof JwtUserDetails) {
                 JwtUserDetails currentUser = (JwtUserDetails) o;
                 registrationResponse.setAssignedBy(currentUser.getUsername());
+            } else if (o instanceof String) {
+                registrationResponse.setAssignedBy((String) o);
             }
         } else {
             registrationResponse.setAssignedBy("SYSTEM"); // called SuperAdmin
@@ -118,7 +105,7 @@ public class AuthService {
 
     @Transactional
     public AuthResponse login(@Valid LoginRequest request) {
-        Optional<AuthUser> authUserOptional = authUserDao.findByUsername(request.getEmail());
+        Optional<AuthUser> authUserOptional = authUserDao.findByUsernameWithRoles(request.getEmail());
         if (authUserOptional.isEmpty()) {
             logger.warn("Login failed: User not found - {}", request.getEmail());
             throw new CustomAuthException("Please register before logging in. User not found: " + request.getEmail());
@@ -152,8 +139,10 @@ public class AuthService {
             throw new CustomAuthException("Refresh token is required for logout");
         }
         try {
-            // revoke the refresh token to invalidate the session, access token will expire on its own after short time
-            // it will log out from the current session, other sessions will remain active until their refresh tokens are revoked or expired
+            // revoke the refresh token to invalidate the session, access token will expire
+            // on its own after short time
+            // it will log out from the current session, other sessions will remain active
+            // until their refresh tokens are revoked or expired
             jwtService.revokeRefreshToken(refreshToken);
             logger.info("User logged out successfully");
         } catch (Exception e) {

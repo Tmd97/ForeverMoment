@@ -19,12 +19,12 @@ spring:
   application:
     name: moment-forever-platform
 
-  # Database Configuration - MySQL
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/moment_forever_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
-#    username: root
-#    password: relay
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#    datasource:
+#      url: jdbc:postgresql://localhost:5432/moment_forever_db
+#      username: postgres
+#      password: relay
+#      driver-class-name: org.postgresql.Driver
 
     # Database Configuration - Postgres SQL
   datasource:
@@ -32,6 +32,14 @@ spring:
      username: neondb_owner
      password: npg_2reOZYBAa8Xb
      driver-class-name: org.postgresql.Driver
+
+  # MongoDB Configuration - For GridFS File Storage (Images)
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: moment_forever
+      # For cloud MongoDB like Atlas:
+      # uri: mongodb+srv://username:password@cluster.mongodb.net/moment_forever_files
 
   # HikariCP Connection Pool Configuration
   hikari:
@@ -186,3 +194,26 @@ springdoc:
   api-docs:
     path: /v3/api-docs
     #http://localhost:8080/api/swagger-ui/index.html
+
+
+
+
+
+# For GridFS bucket is here just a prefix for collection (table)
+# it create two collection for files . one is [bucketname].files and [bucketname].chunks
+# fs is the default bucket name, can give any one if use - in name have to use [] for getting documents
+object:
+  store:
+    provider: gridfs
+    gridfs-bucket: fs
+
+---
+# For S3
+#object:
+#  store:
+#    provider: s3
+#    s3-region: us-east-1
+#    s3-bucket: my-app-images
+#    s3-access-key: ${AWS_ACCESS_KEY}
+#    s3-secret-key: ${AWS_SECRET_KEY}
+    # s3-endpoint: http://localhost:4566  # For LocalStack

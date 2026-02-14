@@ -4,9 +4,7 @@ import com.example.moment_forever.common.errorhandler.ResourceNotFoundException;
 import com.example.moment_forever.data.dao.GenericDaoImpl;
 import com.example.moment_forever.data.entities.auth.AuthUser;
 import com.example.moment_forever.data.entities.auth.AuthUserRole;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
@@ -26,8 +24,7 @@ public class AuthUserDaoImpl extends GenericDaoImpl<AuthUser, Long> implements A
     public Optional<AuthUser> findByUsername(String username) {
         TypedQuery<AuthUser> query = em.createQuery(
                 "SELECT a FROM AuthUser a WHERE a.username = :username",
-                AuthUser.class
-        );
+                AuthUser.class);
         query.setParameter("username", username);
 
         try {
@@ -41,8 +38,7 @@ public class AuthUserDaoImpl extends GenericDaoImpl<AuthUser, Long> implements A
     public boolean existsByUsername(String username) {
         TypedQuery<Long> query = em.createQuery(
                 "SELECT COUNT(a) FROM AuthUser a WHERE a.username = :username",
-                Long.class
-        );
+                Long.class);
         query.setParameter("username", username);
 
         return query.getSingleResult() > 0;
@@ -52,8 +48,7 @@ public class AuthUserDaoImpl extends GenericDaoImpl<AuthUser, Long> implements A
     public boolean existsByExternalUserId(Long externalUserId) {
         TypedQuery<Long> query = em.createQuery(
                 "SELECT COUNT(a) FROM AuthUser a WHERE a.externalUserId = :externalUserId",
-                Long.class
-        );
+                Long.class);
         query.setParameter("externalUserId", externalUserId);
 
         return query.getSingleResult() > 0;
@@ -61,19 +56,35 @@ public class AuthUserDaoImpl extends GenericDaoImpl<AuthUser, Long> implements A
 
     @Override
     public Optional<AuthUser> findByUsernameWithRoles(String username) {
-        TypedQuery<AuthUser> query = em.createQuery(
-                "SELECT DISTINCT a FROM AuthUser a " +
-                        "LEFT JOIN FETCH a.userRoles ur " +
-                        "LEFT JOIN FETCH ur.role " +
-                        "WHERE a.username = :username",
-                AuthUser.class
-        );
-        query.setParameter("username", username);
-
         try {
-            return Optional.of(query.getSingleResult());
+            AuthUser user = em.createQuery(
+                    "SELECT DISTINCT a FROM AuthUser a " +
+                            "LEFT JOIN FETCH a.userRoles ur " +
+                            "LEFT JOIN FETCH ur.role " +
+                            "WHERE a.username = :username",
+                    AuthUser.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+            return Optional.of(user);
         } catch (NoResultException e) {
-            throw new ResourceNotFoundException("User not found with username: " + username);
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<AuthUser> findByIdWithRoles(Long id) {
+        try {
+            AuthUser user = em.createQuery(
+                    "SELECT DISTINCT a FROM AuthUser a " +
+                            "LEFT JOIN FETCH a.userRoles ur " +
+                            "LEFT JOIN FETCH ur.role " +
+                            "WHERE a.id = :id",
+                    AuthUser.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+            return Optional.of(user);
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
     }
 
@@ -84,8 +95,7 @@ public class AuthUserDaoImpl extends GenericDaoImpl<AuthUser, Long> implements A
                 "SELECT ur FROM AuthUserRole ur " +
                         "JOIN FETCH ur.authUser au " +
                         "WHERE ur.role.id = :roleId",
-                AuthUserRole.class
-        );
+                AuthUserRole.class);
         query.setParameter("roleId", id);
         return query.getResultList();
     }

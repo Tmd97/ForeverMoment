@@ -22,6 +22,7 @@
         <module>moment_forever_data</module>
         <module>moment_forever_core</module>
         <module>moment_forever_security</module>
+        <module>moment_forever_object_store</module>
     </modules>
 
     <properties>

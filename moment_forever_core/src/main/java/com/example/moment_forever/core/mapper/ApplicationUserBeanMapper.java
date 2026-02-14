@@ -1,10 +1,9 @@
 package com.example.moment_forever.core.mapper;
 
+import com.example.moment_forever.common.dto.response.AdminAppUserResponseDto;
 import com.example.moment_forever.common.dto.response.AppUserResponseDto;
 import com.example.moment_forever.common.dto.request.UserProfileRequestDto;
-import com.example.moment_forever.common.dto.response.RoleResponseDto;
 import com.example.moment_forever.data.entities.ApplicationUser;
-import com.example.moment_forever.data.entities.auth.AuthUser;
 
 import java.util.List;
 
@@ -34,6 +33,43 @@ public class ApplicationUserBeanMapper {
         dto.setProfilePictureUrl(entity.getProfilePictureUrl());
         dto.setDateOfBirth(entity.getDateOfBirth());
         dto.setPreferredCity(entity.getPreferredCity());
+        return dto;
+    }
+
+    public static AdminAppUserResponseDto mapEntityToAdminDto(
+            ApplicationUser entity) {
+        if (entity == null) {
+            return null;
+        }
+        AdminAppUserResponseDto dto = new AdminAppUserResponseDto();
+        // Map basic fields
+        dto.setId(entity.getId());
+        dto.setFullName(entity.getFullName());
+        dto.setEmail(entity.getEmail());
+        dto.setPhoneNumber(entity.getPhoneNumber());
+        dto.setProfilePictureUrl(entity.getProfilePictureUrl());
+        dto.setDateOfBirth(entity.getDateOfBirth());
+        dto.setPreferredCity(entity.getPreferredCity());
+
+        // Map Admin specific fields
+        if (entity.getAuthUser() != null) {
+            dto.setAuthUserId(entity.getAuthUser().getId());
+            dto.setUsername(entity.getAuthUser().getUsername());
+            dto.setEnabled(entity.getAuthUser().isEnabled());
+            dto.setAccountNonLocked(entity.getAuthUser().isAccountNonLocked());
+            dto.setAccountNonExpired(entity.getAuthUser().isAccountNonExpired());
+            dto.setCredentialsNonExpired(entity.getAuthUser().isCredentialsNonExpired());
+            dto.setExternalUserId(entity.getAuthUser().getExternalUserId());
+            dto.setAuthCreatedAt(entity.getAuthUser().getCreatedAt());
+            dto.setAuthLastLogin(entity.getAuthUser().getLastLogin());
+
+            if (entity.getAuthUser().getUserRoles() != null) {
+                List<String> roles = entity.getAuthUser().getUserRoles().stream()
+                        .map(authUserRole -> authUserRole.getRole().getName())
+                        .collect(java.util.stream.Collectors.toList());
+                dto.setRoles(roles);
+            }
+        }
         return dto;
     }
 }

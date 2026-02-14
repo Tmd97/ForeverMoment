@@ -75,7 +75,7 @@ public class JwtService {
         claims.put("externalUserId", authUser.getExternalUserId());
 
         // Add roles as comma-separated string
-        // TODO: need to fix this, Not seems good coding design
+        // TODO: need to fix this, Not seems good coding design (FIXED)
         String roles = authUser.getUserRoles().stream()
                 .map(authUserRole -> {
                     Role role = authUserRole.getRole();
@@ -103,7 +103,8 @@ public class JwtService {
         claims.put("type", "refresh"); // Mark as refresh token
 
         String rawRefreshToken = buildToken(claims, authUser.getUsername(), refreshExpiration);
-        // save it to the DB for old refresh token revoke, prevent attacks & hack, for block account
+        // save it to the DB for old refresh token revoke, prevent attacks & hack, for
+        // block account
         saveNewRefreshToken(authUser, rawRefreshToken);
         return rawRefreshToken;
     }
@@ -126,8 +127,7 @@ public class JwtService {
         token.setTokenHash(hashedRefreshedToken);
         token.setCreatedAt(LocalDateTime.now());
         token.setExpiryDate(
-                LocalDateTime.now().plus(refreshExpiration, ChronoUnit.MILLIS)
-        );
+                LocalDateTime.now().plus(refreshExpiration, ChronoUnit.MILLIS));
         token.setRevoked(false);
         refreshTokenDao.save(token);
     }
@@ -137,8 +137,8 @@ public class JwtService {
      */
     private String buildToken(Map<String, Object> claims, String subject, long expiration) {
         return Jwts.builder()
-                .setClaims(claims)                     // Payload data
-                .setSubject(subject)                   // User identifier
+                .setClaims(claims) // Payload data
+                .setSubject(subject) // User identifier
                 .setIssuedAt(new Date(System.currentTimeMillis())) // When issued (iat)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration)) // When expires
                 .setIssuer("moment-forever-app")
@@ -234,10 +234,9 @@ public class JwtService {
     /**
      * Legacy method - validates with UserDetails (for login)
      */
-//    public boolean validateToken(String token, UserDetails userDetails) {
-//        return validateToken(token, userDetails.getUsername());
-//    }
-
+    // public boolean validateToken(String token, UserDetails userDetails) {
+    // return validateToken(token, userDetails.getUsername());
+    // }
 
     /**
      * Generic method to extract any claim
@@ -255,21 +254,21 @@ public class JwtService {
                 .getBody();
     }
 
-
     public UserDetails buildUserDetailsFromToken(String token) {
 
         // Reuse existing methods (no duplication)
         String username = extractUsername(token);
         String rolesString = extractRoles(token);
-        Long userId = extractUserId(token);  // Make sure you have this method
+        Long userId = extractUserId(token); // Make sure you have this method
 
         var authorities = rolesString == null || rolesString.isBlank()
                 ? java.util.List.<org.springframework.security.core.authority.SimpleGrantedAuthority>of()
                 : java.util.Arrays.stream(rolesString.split(","))
-                .map(String::trim)
-                .filter(role -> !role.isEmpty())
-                .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role))
-                .toList();
+                        .map(String::trim)
+                        .filter(role -> !role.isEmpty())
+                        .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority(
+                                "ROLE_" + role))
+                        .toList();
         return new JwtUserDetails(userId, username, authorities);
     }
 
@@ -290,10 +289,9 @@ public class JwtService {
             }
 
             // Step 4: Rebuild AuthUser from DB (never from the token)
-            AuthUser authUser = authUserDao.findById(claims.get("userId", Long.class));
-            // Optional: Set roles if you want to generate an access token with roles
-            Set<AuthUserRole> userRoles = authUser.getUserRoles();
-            authUser.setUserRoles(userRoles);
+            // Use optimized query to fetch roles eagerly
+            AuthUser authUser = authUserDao.findByIdWithRoles(claims.get("userId", Long.class))
+                    .orElseThrow(() -> new CustomAuthException("User not found from refresh token"));
 
             // 4. HASH incoming refresh token
             String tokenHash = hashToken(token);
