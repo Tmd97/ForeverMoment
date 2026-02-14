@@ -37,7 +37,6 @@ public class AdminRoleService {
     @Transactional
     public RoleResponseDto createRole(RoleRequestDto requestDto) {
         //Only Super Admin can create system roles
-        checkRoleCreationAndModificationAllowed(requestDto);
         if (roleDao.existsByNameIgnoreCase(requestDto.getRoleName())) {
             throw new IllegalArgumentException(
                     "Role with name '" + requestDto.getRoleName() + "' already exists"
