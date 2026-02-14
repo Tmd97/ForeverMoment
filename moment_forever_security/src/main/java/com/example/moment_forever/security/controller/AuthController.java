@@ -35,16 +35,6 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<?>> register(
             @Valid @RequestBody RegisterRequestDto request) {
-//        // 1. Get current authenticated user
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        JwtUserDetails currentUser = (JwtUserDetails) authentication.getPrincipal();
-//        // 2. CHECK if current user is SUPER_ADMIN
-//        boolean isSuperAdmin = currentUser.getAuthorities().stream()
-//                .anyMatch(authUserRole -> authUserRole.getAuthority().equalsIgnoreCase("SUPER_ADMIN"));
-//        // 3. ENFORCE the rule - throw exception if not SUPER_ADMIN
-//        if (!isSuperAdmin) {
-//            throw new NotAllowedCustomException("Only Super Admin can register new users");
-//        }
         authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseUtil.buildCreatedResponse(null, "User registered successfully"));
     }

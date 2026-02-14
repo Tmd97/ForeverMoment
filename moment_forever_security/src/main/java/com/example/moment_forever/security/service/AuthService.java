@@ -125,7 +125,7 @@ public class AuthService {
 
     @Transactional
     public AuthResponse login(@Valid LoginRequest request) {
-        Optional<AuthUser> authUserOptional = authUserDao.findByUsername(request.getEmail());
+        Optional<AuthUser> authUserOptional = authUserDao.findByUsernameWithRoles(request.getEmail());
         if (authUserOptional.isEmpty()) {
             logger.warn("Login failed: User not found - {}", request.getEmail());
             throw new CustomAuthException("Please register before logging in. User not found: " + request.getEmail());
