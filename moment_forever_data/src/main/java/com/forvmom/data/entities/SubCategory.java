@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "sub_category")
+@org.hibernate.annotations.SQLDelete(sql = "UPDATE sub_category SET deleted = true WHERE id = ?")
+@org.hibernate.annotations.Where(clause = "deleted = false")
 public class SubCategory extends NamedEntity {
 
     @Column(name = "description")
@@ -46,6 +48,7 @@ public class SubCategory extends NamedEntity {
     public void setCategory(Category category) {
         this.category = category;
     }
+
     public Category getCategory() {
         return category;
     }

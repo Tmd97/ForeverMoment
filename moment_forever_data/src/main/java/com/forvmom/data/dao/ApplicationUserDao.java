@@ -47,8 +47,6 @@ public interface ApplicationUserDao extends GenericDao<ApplicationUser, Long> {
      */
     List<ApplicationUser> searchByNameOrEmail(String searchTerm);
 
-    void deleteByAppUserId(Long id);
-
     /**
      * Optimized fetch for Admin: Get all users with AuthUser and Roles in one query
      */

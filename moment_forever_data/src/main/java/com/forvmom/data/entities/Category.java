@@ -1,12 +1,16 @@
 package com.forvmom.data.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "category")
+@SQLDelete(sql = "UPDATE category SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 public class Category extends NamedEntity {
 
     @Column(name = "description")
@@ -18,8 +22,8 @@ public class Category extends NamedEntity {
     @Column(name = "slug")
     private String slug;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
-    private List<SubCategory> subCategories=new ArrayList<>();
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<SubCategory> subCategories = new ArrayList<>();
 
     public String getDescription() {
         return description;

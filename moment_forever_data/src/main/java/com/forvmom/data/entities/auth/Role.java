@@ -5,7 +5,24 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "roles")
+@org.hibernate.annotations.SQLDelete(sql = "UPDATE roles SET deleted = true WHERE id = ?")
+@org.hibernate.annotations.Where(clause = "deleted = false")
 public class Role {
+
+    // ... existing fields ...
+
+    @Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
+    private boolean deleted = false;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    // ... rest of the class ...
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +46,8 @@ public class Role {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public Role() {}
+    public Role() {
+    }
 
     public Role(String name, String description) {
         this.name = name;
@@ -71,12 +89,15 @@ public class Role {
     public Integer getPermissionLevel() {
         return permissionLevel;
     }
+
     public void setPermissionLevel(Integer permissionLevel) {
         this.permissionLevel = permissionLevel;
     }
+
     public boolean isSystemRole() {
         return systemRole;
     }
+
     public void setSystemRole(boolean systemRole) {
         this.systemRole = systemRole;
     }
@@ -92,6 +113,7 @@ public class Role {
     public void setActive(boolean active) {
         isActive = active;
     }
+
     public boolean isActive() {
         return isActive;
     }

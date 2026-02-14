@@ -10,18 +10,18 @@ import java.util.Date;
 public abstract class NamedEntity {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "is_active")
-    private Boolean isActive=true;
+    private Boolean isActive = true;
 
     @CreationTimestamp
-    @Column(name="created_on")
+    @Column(name = "created_on")
     private Date createdOn;
 
     @UpdateTimestamp
@@ -63,7 +63,19 @@ public abstract class NamedEntity {
     public boolean isActive() {
         return isActive;
     }
+
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    @Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
+    private boolean deleted = false;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

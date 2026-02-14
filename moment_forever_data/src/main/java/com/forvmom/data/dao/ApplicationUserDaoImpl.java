@@ -108,12 +108,8 @@ public class ApplicationUserDaoImpl extends GenericDaoImpl<ApplicationUser, Long
         return query.getResultList();
     }
 
-    @Override
-    public void deleteByAppUserId(Long authUserId) {
-        em.createQuery("DELETE FROM ApplicationUser a WHERE a.authUser.id = :authUserId")
-                .setParameter("authUserId", authUserId)
-                .executeUpdate();
-    }
+    // deleteByAppUserId removed in favor of standard delete() which supports soft
+    // delete
 
     @Override
     public List<ApplicationUser> findAllWithAuthAndRoles() {

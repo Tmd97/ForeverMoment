@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Table(name = "application_users")
+@org.hibernate.annotations.SQLDelete(sql = "UPDATE application_users SET deleted = true WHERE id = ?")
+@org.hibernate.annotations.Where(clause = "deleted = false")
+@Entity
 public class ApplicationUser extends NamedEntity {
 
     @OneToOne(optional = false)
