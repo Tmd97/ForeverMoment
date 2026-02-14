@@ -51,7 +51,7 @@ public class AdminUserService {
             throw new ResourceNotFoundException(
                     "User created but profile not found for auth id: " + authResponse.getUserId());
         }
-        AdminAppUserResponseDto res=ApplicationUserBeanMapper.mapEntityToAdminDto(appUser.get());
+        AdminAppUserResponseDto res = ApplicationUserBeanMapper.mapEntityToAdminDto(appUser.get());
         // do populate whatever required from auth response(afermath)
         res.setCreatedBy(authResponse.getAssignedBy());
         return res;
@@ -59,15 +59,13 @@ public class AdminUserService {
 
     @Transactional(readOnly = true)
     public AdminAppUserResponseDto getAppUserById(Long id) {
-        ApplicationUser appUser = applicationUserDao.findById(id);
-        if (appUser == null) {
-            throw new ResourceNotFoundException("No User exist given Id exist " + id);
-        }
+        ApplicationUser appUser = applicationUserDao.findByIdWithAuthAndRoles(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No User exist given Id exist " + id));
         return ApplicationUserBeanMapper.mapEntityToAdminDto(appUser);
     }
 
     @Transactional(readOnly = true)
-    public com.example.moment_forever.common.dto.response.AdminAppUserResponseDto getAppUserByEmailId(String email) {
+    public AdminAppUserResponseDto getAppUserByEmailId(String email) {
         Optional<ApplicationUser> appUser = applicationUserDao.findByEmailIgnoreCase(email);
         if (appUser.isEmpty()) {
             throw new ResourceNotFoundException("No User exist given email exist " + email);
@@ -76,9 +74,10 @@ public class AdminUserService {
     }
 
     @Transactional(readOnly = true)
-    public List<com.example.moment_forever.common.dto.response.AdminAppUserResponseDto> getAllAppUser() {
-        List<ApplicationUser> applicationUsers = applicationUserDao.findAll();
-        if (applicationUsers == null || applicationUsers.size() == 0) {
+    public List<AdminAppUserResponseDto> getAllAppUser() {
+        // Use optimized query to fetch All Users + Auth + Roles
+        List<ApplicationUser> applicationUsers = applicationUserDao.findAllWithAuthAndRoles();
+        if (applicationUsers == null || applicationUsers.isEmpty()) {
             throw new ResourceNotFoundException("users doesn't exist");
         }
         return applicationUsers.stream()

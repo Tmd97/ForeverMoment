@@ -35,7 +35,7 @@ public class AdminUserController {
 
     @GetMapping("/profile/{userId}")
     public ResponseEntity<ApiResponse<?>> getUserProfile(@PathVariable Long userId) {
-        com.example.moment_forever.common.dto.response.AdminAppUserResponseDto appUserResponseDto = appUserService
+        AdminAppUserResponseDto appUserResponseDto = appUserService
                 .getAppUserById(userId);
         return ResponseEntity.ok(
                 ResponseUtil.buildOkResponse(appUserResponseDto, AppConstants.MSG_FETCHED));
@@ -45,7 +45,7 @@ public class AdminUserController {
     @PostMapping("/profile")
     public ResponseEntity<ApiResponse<?>> getUserProfile(
             @Valid @RequestBody UserProfileRequestDto userProfileRequestDto) {
-        com.example.moment_forever.common.dto.response.AdminAppUserResponseDto res = appUserService
+        AdminAppUserResponseDto res = appUserService
                 .getAppUserByEmailId(userProfileRequestDto.getEmail());
         return ResponseEntity.ok(
                 ResponseUtil.buildOkResponse(res, AppConstants.MSG_FETCHED));

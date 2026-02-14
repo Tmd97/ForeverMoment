@@ -1,4 +1,5 @@
 package com.example.moment_forever.data.dao;
+
 import com.example.moment_forever.data.entities.ApplicationUser;
 
 import java.time.LocalDateTime;
@@ -47,4 +48,15 @@ public interface ApplicationUserDao extends GenericDao<ApplicationUser, Long> {
     List<ApplicationUser> searchByNameOrEmail(String searchTerm);
 
     void deleteByAppUserId(Long id);
+
+    /**
+     * Optimized fetch for Admin: Get all users with AuthUser and Roles in one query
+     */
+    List<ApplicationUser> findAllWithAuthAndRoles();
+
+    /**
+     * Optimized fetch for Admin: Get user by ID with AuthUser and Roles in one
+     * query
+     */
+    Optional<ApplicationUser> findByIdWithAuthAndRoles(Long id);
 }
