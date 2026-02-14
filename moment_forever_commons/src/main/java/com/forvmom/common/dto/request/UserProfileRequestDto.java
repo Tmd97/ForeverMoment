@@ -29,6 +29,8 @@ public class UserProfileRequestDto {
     @Size(max = 50)
     private String preferredCity;
 
+    private Long roleId;
+
     public String getFullName() {
         return fullName;
     }
@@ -75,5 +77,14 @@ public class UserProfileRequestDto {
 
     public void setPreferredCity(String preferredCity) {
         this.preferredCity = preferredCity;
+    }
+
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

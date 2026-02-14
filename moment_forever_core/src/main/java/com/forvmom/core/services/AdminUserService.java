@@ -13,6 +13,8 @@ import com.forvmom.data.dao.auth.AuthUserRoleDao;
 import com.forvmom.data.entities.ApplicationUser;
 import com.forvmom.data.entities.auth.AuthUserRole;
 import com.forvmom.data.entities.auth.Role;
+import com.forvmom.data.dao.auth.RoleDao;
+import com.forvmom.data.entities.auth.AuthUser;
 import com.forvmom.security.dto.AuthResponse;
 import com.forvmom.security.dto.RegisterRequestDto;
 import com.forvmom.security.service.AuthService;
@@ -43,6 +45,9 @@ public class AdminUserService {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private RoleDao roleDao;
 
     @Transactional
     public AdminAppUserResponseDto createUser(RegisterRequestDto request) {
@@ -96,6 +101,38 @@ public class AdminUserService {
         }
         // map only updatable fields
         ApplicationUserBeanMapper.mapDtoToEntity(userDto, existing);
+
+        // Handle Role Update if provided
+        if (userDto.getRoleId() != null) {
+            Role role = roleDao.findById(userDto.getRoleId());
+            if (role == null) {
+                throw new ResourceNotFoundException("User Role not exist in the System");
+            }
+
+            AuthUser authUser = existing.getAuthUser();
+            // Clear existing roles and add new one
+            authUser.getUserRoles().clear();
+            authUser.addRole(role);
+            // AuthUser updates will be cascaded if ApplicationUser -> AuthUser cascade is
+            // set,
+            // or we might need to save AuthUser explicitly if not.
+            // ApplicationUser has @OneToOne(optional = false) private AuthUser authUser;
+            // It defaults to no cascade usually unless specified.
+            // Let's save AuthUser explicitly to be safe, or just rely on Transactional.
+            // Since we modified the collection of AuthUser, and AuthUser is a managed
+            // entity (fetched via graph in findById possibly, or via getter),
+            // changes should be flushed at transaction commit.
+            // However, existing ApplicationUser fetch in updateAppUser is just findById.
+            // applicationUserDao.findById(userId) might not fetch AuthUser eagerly?
+            // ApplicationUser.java: @OneToOne(optional = false) ... private AuthUser
+            // authUser; (Default EAGER for OneToOne).
+            // So AuthUser is fetched.
+            // AuthUser.java: @OneToMany(mappedBy = "authUser", fetch = FetchType.LAZY,
+            // cascade = CascadeType.ALL) private Set<AuthUserRole> userRoles;
+            // Accessing getUserRoles() might trigger lazy load.
+            // Since we are in @Transactional, it should work.
+        }
+
         ApplicationUser res = applicationUserDao.update(existing);
         return ApplicationUserBeanMapper.mapEntityToAdminDto(res);
     }
@@ -139,16 +176,31 @@ public class AdminUserService {
         logger.info("User Account deleted successfully for userId: {}", userId);
     }
 
-    @Transactional
-    public List<RoleResponseDto> getUserRoles(Long userId) {
-        List<AuthUserRole> authUserRoles = authUserRoleDao.findByAuthUserId(userId);
-        if (authUserRoles == null || authUserRoles.isEmpty()) {
-            throw new ResourceNotFoundException("No roles found for user id: " + userId);
-        }
-        List<RoleResponseDto> responseDtos = authUserRoles.stream()
-                .map(authUserRole -> authUserRole.getRole())
-                .map(RoleBeanMapper::mapEntityToDto).collect(Collectors.toList());
+    // @Transactional
+    // public List<RoleResponseDto> getUserRoles(Long userId) {
+    // List<AuthUserRole> authUserRoles = authUserRoleDao.findByAuthUserId(userId);
+    // if (authUserRoles == null || authUserRoles.isEmpty()) {
+    // throw new ResourceNotFoundException("No roles found for user id: " + userId);
+    // }
+    // List<RoleResponseDto> responseDtos = authUserRoles.stream()
+    // .map(authUserRole -> authUserRole.getRole())
+    // .map(RoleBeanMapper::mapEntityToDto).collect(Collectors.toList());
+    //
+    // return responseDtos;
+    // }
 
-        return responseDtos;
+    @Transactional
+    public List<RoleResponseDto> getRolesByAppUserId(Long appUserId) {
+        ApplicationUser appUser = applicationUserDao.findByIdWithAuthAndRoles(appUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("No user found for id: " + appUserId));
+
+        if (appUser.getAuthUser() == null || appUser.getAuthUser().getUserRoles() == null) {
+            return List.of();
+        }
+
+        return appUser.getAuthUser().getUserRoles().stream()
+                .map(AuthUserRole::getRole)
+                .map(RoleBeanMapper::mapEntityToDto)
+                .collect(Collectors.toList());
     }
 }

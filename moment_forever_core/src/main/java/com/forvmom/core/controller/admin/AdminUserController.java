@@ -49,14 +49,14 @@ public class AdminUserController {
         }
 
         // TODO: currently this is for fetching user profile by any unique fields
-        @PostMapping("/profile")
-        public ResponseEntity<ApiResponse<?>> getUserProfile(
-                        @Valid @RequestBody UserProfileRequestDto userProfileRequestDto) {
-                AdminAppUserResponseDto res = appUserService
-                                .getAppUserByEmailId(userProfileRequestDto.getEmail());
-                return ResponseEntity.ok(
-                                ResponseUtil.buildOkResponse(res, AppConstants.MSG_FETCHED));
-        }
+//        @GetMapping("/profile/{}")
+//        public ResponseEntity<ApiResponse<?>> getUserProfileByEmail(
+//                        @Valid @RequestBody UserProfileRequestDto userProfileRequestDto) {
+//                AdminAppUserResponseDto res = appUserService
+//                                .getAppUserByEmailId(userProfileRequestDto.getEmail());
+//                return ResponseEntity.ok(
+//                                ResponseUtil.buildOkResponse(res, AppConstants.MSG_FETCHED));
+//        }
 
         @PutMapping("/profile/{userId}")
         public ResponseEntity<ApiResponse<?>> updateUserProfile(
@@ -94,7 +94,7 @@ public class AdminUserController {
         @GetMapping("/{userId}/roles")
         @Operation(summary = "Get User Roles", description = "Fetch all roles assigned to a user")
         public ResponseEntity<ApiResponse<?>> getUserRoles(@PathVariable Long userId) {
-                List<RoleResponseDto> roleResponseDtos = appUserService.getUserRoles(userId);
+                List<RoleResponseDto> roleResponseDtos = appUserService.getRolesByAppUserId(userId);
                 return ResponseEntity.ok(
                                 ResponseUtil.buildOkResponse(roleResponseDtos, "User roles fetched successfully"));
         }
