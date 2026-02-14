@@ -20,6 +20,8 @@ public interface RoleDao extends GenericDao<Role, Long> {
     List<Role> getAllActiveRoles();
 
     List<Role> findByIds(List<Long> ids);
+
+    List<Role> searchRoles(String query);
 //    List<AuthUserRole> findAuthUserByRole(Long id);
 
 
